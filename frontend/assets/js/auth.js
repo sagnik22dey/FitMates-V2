@@ -4,15 +4,22 @@
  * Check if user is logged in and redirect if not
  */
 function requireAuth() {
-    console.log('🔐 Checking authentication...');
+    if (window.logger) {
+        window.logger.debug('Checking authentication...');
+    }
     const isAuth = api.isAuthenticated();
-    console.log('Is authenticated:', isAuth);
+    
     if (!isAuth) {
-        console.log('❌ Not authenticated, redirecting to login');
+        if (window.logger) {
+            window.logger.warn('Not authenticated, redirecting to login');
+        }
         window.location.href = '/login.html';
         return false;
     }
-    console.log('✅ Authentication check passed');
+    
+    if (window.logger) {
+        window.logger.debug('Authentication check passed');
+    }
     return true;
 }
 
@@ -20,15 +27,22 @@ function requireAuth() {
  * Check if user has admin role
  */
 function requireAdmin() {
-    console.log('🔐 Checking admin role...');
+    if (window.logger) {
+        window.logger.debug('Checking admin role...');
+    }
     const user = api.getUser();
-    console.log('Current user:', user);
+    
     if (!user || user.role !== 'admin') {
-        console.log('❌ Not admin, redirecting to login');
+        if (window.logger) {
+            window.logger.warn('Not admin, redirecting to login');
+        }
         window.location.href = '/login.html';
         return false;
     }
-    console.log('✅ Admin check passed');
+    
+    if (window.logger) {
+        window.logger.debug('Admin check passed', { user: user.email });
+    }
     return true;
 }
 
@@ -36,15 +50,22 @@ function requireAdmin() {
  * Check if user has client role
  */
 function requireClient() {
-    console.log('🔐 Checking client role...');
+    if (window.logger) {
+        window.logger.debug('Checking client role...');
+    }
     const user = api.getUser();
-    console.log('Current user:', user);
+    
     if (!user || user.role !== 'client') {
-        console.log('❌ Not client, redirecting to login');
+        if (window.logger) {
+            window.logger.warn('Not client, redirecting to login');
+        }
         window.location.href = '/login.html';
         return false;
     }
-    console.log('✅ Client check passed');
+    
+    if (window.logger) {
+        window.logger.debug('Client check passed', { user: user.email });
+    }
     return true;
 }
 

@@ -1,16 +1,30 @@
 from fastapi import APIRouter, HTTPException, Header, Depends
 from typing import List, Optional
+import logging
 import database as db_module
 import models
 from utils import hash_password, get_token_data
+from utils.helpers import format_datetime
 
 db = db_module.db
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/admin", tags=["Admin"])
 
 # Dependency to verify admin role
 async def verify_admin(authorization: Optional[str] = Header(None)):
-    """Verify that the user is an admin"""
+    """
+    Verify that the user is an admin
+    
+    Args:
+        authorization: Bearer token from Authorization header
+        
+    Returns:
+        Dict with user token data
+        
+    Raises:
+        HTTPException: If token is invalid or user is not admin
+    """
     if not authorization or not authorization.startswith("Bearer "):
         raise HTTPException(status_code=401, detail="Missing authorization header")
     
@@ -24,51 +38,59 @@ async def verify_admin(authorization: Optional[str] = Header(None)):
 
 @router.get("/dashboard/analytics")
 async def get_dashboard_analytics(admin: dict = Depends(verify_admin)):
-    """Get analytics data for admin dashboard"""
+    """
+    Get analytics data for admin dashboard
     
-    # Get total clients count
-    total_clients = await db.fetchval("SELECT COUNT(*) FROM clients")
+    Optimized with a single CTE query for better performance
     
-    # Get total forms count
-    total_forms = await db.fetchval("SELECT COUNT(*) FROM forms")
-    
-    # Get published forms count
-    published_forms = await db.fetchval(
-        "SELECT COUNT(*) FROM forms WHERE status = 'published'"
-    )
-    
-    # Get total submissions count
-    total_submissions = await db.fetchval("SELECT COUNT(*) FROM submissions")
-    
-    # Get total reports count
-    total_reports = await db.fetchval("SELECT COUNT(*) FROM reports")
-    
-    # Get recent submissions (last 5)
-    recent_submissions = await db.fetch("""
-        SELECT s.id, s.submitted_at, c.name as client_name, f.title as form_title
-        FROM submissions s
-        JOIN clients c ON s.client_id = c.id
-        JOIN forms f ON s.form_id = f.id
-        ORDER BY s.submitted_at DESC
-        LIMIT 5
-    """)
-    
-    return {
-        "total_clients": total_clients,
-        "total_forms": total_forms,
-        "published_forms": published_forms,
-        "total_submissions": total_submissions,
-        "total_reports": total_reports,
-        "recent_activity": [
-            {
-                "id": str(row['id']),
-                "client_name": row['client_name'],
-                "form_title": row['form_title'],
-                "submitted_at": row['submitted_at'].isoformat()
-            }
-            for row in recent_submissions
-        ]
-    }
+    Returns:
+        Dict with dashboard analytics including counts and recent activity
+    """
+    try:
+        # Optimized single query using CTE for all counts
+        analytics_query = """
+            WITH counts AS (
+                SELECT
+                    (SELECT COUNT(*) FROM clients) as total_clients,
+                    (SELECT COUNT(*) FROM forms) as total_forms,
+                    (SELECT COUNT(*) FROM forms WHERE status = 'published') as published_forms,
+                    (SELECT COUNT(*) FROM submissions) as total_submissions,
+                    (SELECT COUNT(*) FROM reports) as total_reports
+            )
+            SELECT * FROM counts;
+        """
+        
+        counts = await db.fetchrow(analytics_query)
+        
+        # Get recent submissions separately (still efficient with proper indexes)
+        recent_submissions = await db.fetch("""
+            SELECT s.id, s.submitted_at, c.name as client_name, f.title as form_title
+            FROM submissions s
+            JOIN clients c ON s.client_id = c.id
+            JOIN forms f ON s.form_id = f.id
+            ORDER BY s.submitted_at DESC
+            LIMIT 5
+        """)
+        
+        return {
+            "total_clients": counts['total_clients'],
+            "total_forms": counts['total_forms'],
+            "published_forms": counts['published_forms'],
+            "total_submissions": counts['total_submissions'],
+            "total_reports": counts['total_reports'],
+            "recent_activity": [
+                {
+                    "id": str(row['id']),
+                    "client_name": row['client_name'],
+                    "form_title": row['form_title'],
+                    "submitted_at": format_datetime(row['submitted_at'])
+                }
+                for row in recent_submissions
+            ]
+        }
+    except Exception as e:
+        logger.error(f"Error fetching dashboard analytics: {e}")
+        raise HTTPException(status_code=500, detail="Failed to fetch dashboard analytics")
 
 @router.get("/clients", response_model=List[models.ClientResponse])
 async def get_all_clients(admin: dict = Depends(verify_admin)):

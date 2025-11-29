@@ -23,6 +23,8 @@ const api = {
    */
   async request(endpoint, options = {}) {
     const token = this.getToken();
+    const method = options.method || 'GET';
+    const fullUrl = `${API_BASE_URL}${endpoint}`;
 
     const config = {
       headers: {
@@ -37,14 +39,21 @@ const api = {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
 
-    const fullUrl = `${API_BASE_URL}${endpoint}`;
-    console.log(`🌐 API Request: ${options.method || 'GET'} ${fullUrl}`);
+    // Log API call using logger
+    if (window.logger) {
+      window.logger.apiCall(method, fullUrl, options.body);
+    }
+
+    const startTime = performance.now();
 
     try {
       const response = await fetch(fullUrl, config);
 
       // Handle unauthorized
       if (response.status === 401) {
+        if (window.logger) {
+          window.logger.warn('Unauthorized API call, redirecting to login');
+        }
         this.logout();
         window.location.href = '/login.html';
         throw new Error('Unauthorized');
@@ -53,16 +62,26 @@ const api = {
       const data = await response.json();
 
       if (!response.ok) {
-        console.error('❌ API Error:', data);
+        if (window.logger) {
+          window.logger.apiError(method, fullUrl, data);
+        }
         throw new Error(data.detail || 'Request failed');
       }
 
-      console.log('✅ API Response:', data);
+      // Log response and performance
+      const duration = performance.now() - startTime;
+      if (window.logger) {
+        window.logger.apiResponse(method, fullUrl, data);
+        window.logger.performance(`API ${method} ${endpoint}`, duration);
+      }
+
       return data;
     } catch (error) {
-      console.error('❌ API Request Failed:', error);
-      console.error('URL:', fullUrl);
-      console.error('Error details:', error.message);
+      if (window.logger) {
+        window.logger.apiError(method, fullUrl, error);
+      } else {
+        console.error('API Request Failed:', error);
+      }
       throw error;
     }
   },

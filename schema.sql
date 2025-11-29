@@ -62,9 +62,19 @@ CREATE TABLE reports (
 -- Create indexes for better performance
 CREATE INDEX idx_forms_client_id ON forms(client_id);
 CREATE INDEX idx_forms_status ON forms(status);
+CREATE INDEX idx_forms_client_status ON forms(client_id, status);
+CREATE INDEX idx_forms_is_template ON forms(is_template) WHERE is_template = true;
+
 CREATE INDEX idx_submissions_client_id ON submissions(client_id);
 CREATE INDEX idx_submissions_form_id ON submissions(form_id);
+CREATE INDEX idx_submissions_client_form ON submissions(client_id, form_id);
+CREATE INDEX idx_submissions_submitted_at ON submissions(submitted_at DESC);
+
 CREATE INDEX idx_reports_client_id ON reports(client_id);
+CREATE INDEX idx_reports_submission_id ON reports(submission_id);
+CREATE INDEX idx_reports_created_at ON reports(created_at DESC);
+
+CREATE INDEX idx_clients_email ON clients(email);
 
 -- Insert a default admin account (password: admin123)
 -- Password hash for 'admin123' using bcrypt
