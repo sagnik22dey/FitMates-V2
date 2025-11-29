@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Profile - FitMates</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/assets/css/common.css" />
+    <link rel="stylesheet" href="/assets/css/navbar.css" />
+    <link rel="stylesheet" href="/assets/css/user.css" />
+    <style>
+      .profile-container {
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+
+      .profile-hero {
+        background: linear-gradient(
+          135deg,
+          rgba(239, 68, 68, 0.15) 0%,
+          rgba(0, 0, 0, 0.9) 100%
+        );
+        border-radius: var(--radius-xl);
+        padding: var(--spacing-2xl);
+        margin-bottom: var(--spacing-2xl);
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .profile-hero::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(
+          circle,
+          rgba(239, 68, 68, 0.1) 0%,
+          transparent 70%
+        );
+        animation: rotate 20s linear infinite;
+      }
+
+      @keyframes rotate {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .profile-avatar-large {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        background: var(--gradient-accent);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 4rem;
+        font-weight: 800;
+        color: white;
+        margin: 0 auto var(--spacing-lg);
+        border: 4px solid rgba(239, 68, 68, 0.3);
+        position: relative;
+        z-index: 1;
+      }
+
+      .profile-name-large {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: var(--spacing-sm);
+        position: relative;
+        z-index: 1;
+      }
+
+      .profile-email-large {
+        font-size: 1.125rem;
+        color: var(--color-text-secondary);
+        position: relative;
+        z-index: 1;
+      }
+
+      .profile-form-card {
+        background: linear-gradient(
+          135deg,
+          rgba(26, 26, 26, 0.95) 0%,
+          rgba(10, 10, 10, 0.98) 100%
+        );
+        border: 1px solid rgba(239, 68, 68, 0.15);
+        border-radius: var(--radius-xl);
+        padding: var(--spacing-2xl);
+      }
+
+      .form-section {
+        margin-bottom: var(--spacing-2xl);
+      }
+
+      .form-section-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: var(--spacing-lg);
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-md);
+      }
+
+      .form-section-title::before {
+        content: "";
+        width: 4px;
+        height: 1.5rem;
+        background: var(--gradient-accent);
+        border-radius: 2px;
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: var(--spacing-lg);
+      }
+
+      .input-enhanced {
+        background: rgba(26, 26, 26, 0.5);
+        border: 1px solid rgba(239, 68, 68, 0.2);
+        border-radius: var(--radius-md);
+        padding: var(--spacing-md);
+        color: var(--color-text-primary);
+        font-size: 1rem;
+        transition: all var(--transition-fast);
+      }
+
+      .input-enhanced:focus {
+        outline: none;
+        border-color: var(--color-accent-red);
+        background: rgba(26, 26, 26, 0.8);
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+        transform: translateY(-2px);
+      }
+
+      .input-enhanced:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .action-buttons {
+        display: flex;
+        gap: var(--spacing-md);
+        margin-top: var(--spacing-2xl);
+      }
+
+      .btn-enhanced {
+        flex: 1;
+        padding: var(--spacing-lg);
+        font-size: 1rem;
+        font-weight: 600;
+        border-radius: var(--radius-md);
+        transition: all var(--transition-normal);
+      }
+
+      .btn-enhanced:hover {
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 10px 20px rgba(239, 68, 68, 0.3);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Top Navbar -->
+    <nav class="top-navbar">
+      <div class="navbar-container">
+        <button class="hamburger-btn" id="hamburgerBtn">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <a href="/user/dashboard.html" class="navbar-brand">
+          <div>
+            <div class="navbar-logo">FitMates</div>
+            <p class="navbar-subtitle">Client Portal</p>
+          </div>
+        </a>
+
+        <ul class="navbar-menu">
+          <li class="navbar-menu-item">
+            <a href="/user/dashboard.html" class="navbar-menu-link">
+              <span>🏠</span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li class="navbar-menu-item">
+            <a href="/user/submissions.html" class="navbar-menu-link">
+              <span>📝</span>
+              <span>Submissions</span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="navbar-actions">
+          <div class="navbar-user">
+            <div class="navbar-avatar" id="navbarAvatar">C</div>
+            <div class="navbar-user-info">
+              <div class="navbar-user-name" id="navbarUserName">Client</div>
+              <div class="navbar-user-role">Member</div>
+            </div>
+            <!-- Dropdown Menu -->
+            <div class="user-dropdown">
+              <a href="/user/profile.html" class="user-dropdown-item">
+                <span>👤</span>
+                <span>Visit Profile</span>
+              </a>
+              <a
+                href="#"
+                class="user-dropdown-item"
+                onclick="event.preventDefault(); auth.logout();"
+              >
+                <span>🚪</span>
+                <span>Logout</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+
+    <!-- Mobile Sidebar -->
+    <aside class="mobile-sidebar" id="mobileSidebar">
+      <div class="mobile-sidebar-header">
+        <div class="mobile-sidebar-logo">FitMates</div>
+        <p class="mobile-sidebar-subtitle">Client Portal</p>
+      </div>
+
+      <nav>
+        <ul class="mobile-menu">
+          <li class="mobile-menu-item">
+            <a href="/user/dashboard.html" class="mobile-menu-link">
+              <span class="mobile-menu-icon">🏠</span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li class="mobile-menu-item">
+            <a href="/user/submissions.html" class="mobile-menu-link">
+              <span class="mobile-menu-icon">📝</span>
+              <span>Submissions</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="mobile-sidebar-footer">
+        <div class="user-info">
+          <div class="user-avatar" id="mobileUserAvatar">C</div>
+          <div class="user-details">
+            <h4 id="mobileUserName">Client</h4>
+            <p id="mobileUserEmail">client@example.com</p>
+          </div>
+        </div>
+        <button
+          class="btn btn-secondary"
+          style="width: 100%"
+          onclick="auth.logout()"
+        >
+          Logout
+        </button>
+      </div>
+    </aside>
+
+    <div class="user-layout">
+      <!-- Main Content -->
+      <main class="user-main">
+        <div class="profile-container">
+          <!-- Profile Hero -->
+          <div class="profile-hero">
+            <div class="profile-avatar-large" id="profileAvatar">C</div>
+            <h1 class="profile-name-large" id="profileNameDisplay">
+              Client Name
+            </h1>
+            <p class="profile-email-large" id="profileEmailDisplay">
+              client@example.com
+            </p>
+          </div>
+
+          <!-- Profile Form -->
+          <div class="profile-form-card">
+            <form id="profileForm">
+              <!-- Personal Information -->
+              <div class="form-section">
+                <h3 class="form-section-title">Personal Information</h3>
+                <div class="form-grid">
+                  <div class="input-group">
+                    <label class="input-label" for="name">Full Name *</label>
+                    <input
+                      type="text"
+                      id="name"
+                      class="input input-enhanced"
+                      required
+                    />
+                  </div>
+
+                  <div class="input-group">
+                    <label class="input-label" for="email">Email Address</label>
+                    <input
+                      type="email"
+                      id="email"
+                      class="input input-enhanced"
+                      disabled
+                    />
+                  </div>
+
+                  <div class="input-group">
+                    <label class="input-label" for="dob">Date of Birth</label>
+                    <input type="date" id="dob" class="input input-enhanced" />
+                  </div>
+
+                  <div class="input-group">
+                    <label class="input-label" for="mobile"
+                      >Mobile Number</label
+                    >
+                    <input
+                      type="tel"
+                      id="mobile"
+                      class="input input-enhanced"
+                      placeholder="+1 (555) 000-0000"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Physical Stats -->
+              <div class="form-section">
+                <h3 class="form-section-title">Physical Stats</h3>
+                <div class="form-grid">
+                  <div class="input-group">
+                    <label class="input-label" for="height">Height (cm)</label>
+                    <input
+                      type="number"
+                      id="height"
+                      class="input input-enhanced"
+                      step="0.1"
+                      placeholder="175.5"
+                    />
+                  </div>
+
+                  <div class="input-group">
+                    <label class="input-label" for="weight">Weight (kg)</label>
+                    <input
+                      type="number"
+                      id="weight"
+                      class="input input-enhanced"
+                      step="0.1"
+                      placeholder="70.5"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Medical History -->
+              <div class="form-section">
+                <h3 class="form-section-title">Medical Information</h3>
+                <div class="input-group">
+                  <label class="input-label" for="medicalHistory"
+                    >Medical History & Notes</label
+                  >
+                  <textarea
+                    id="medicalHistory"
+                    class="input input-enhanced"
+                    rows="5"
+                    placeholder="Any medical conditions, allergies, or important notes..."
+                  ></textarea>
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="action-buttons">
+                <button
+                  type="button"
+                  class="btn btn-secondary btn-enhanced"
+                  onclick="loadProfile()"
+                >
+                  Reset Changes
+                </button>
+                <button type="submit" class="btn btn-primary btn-enhanced">
+                  💾 Save Profile
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/auth.js"></script>
+    <script src="/assets/js/utils.js"></script>
+    <script src="/assets/js/navigation.js"></script>
+    <script>
+      // Require client authentication
+      auth.requireClient();
+
+      // Set user info in all locations
+      const user = auth.getCurrentUser();
+      if (user) {
+        const userName = user.name || "Client";
+        const userEmail = user.email;
+        const userInitial = userName[0].toUpperCase();
+
+        // Top navbar
+        document.getElementById("navbarUserName").textContent = userName;
+        document.getElementById("navbarAvatar").textContent = userInitial;
+
+        // Mobile sidebar
+        document.getElementById("mobileUserName").textContent = userName;
+        document.getElementById("mobileUserEmail").textContent = userEmail;
+        document.getElementById("mobileUserAvatar").textContent = userInitial;
+      }
+
+      // Load profile
+      async function loadProfile() {
+        try {
+          const profile = await api.get("/api/client/profile");
+
+          document.getElementById("name").value = profile.name || "";
+          document.getElementById("email").value = profile.email || "";
+          document.getElementById("dob").value = profile.dob || "";
+          document.getElementById("height").value = profile.height || "";
+          document.getElementById("weight").value = profile.weight || "";
+          document.getElementById("mobile").value = profile.mobile || "";
+          document.getElementById("medicalHistory").value =
+            profile.medical_history || "";
+
+          // Update display
+          const initial = (profile.name || "C")[0].toUpperCase();
+          document.getElementById("profileAvatar").textContent = initial;
+          document.getElementById("navbarAvatar").textContent = initial;
+          document.getElementById("mobileUserAvatar").textContent = initial;
+          document.getElementById("profileNameDisplay").textContent =
+            profile.name || "Client Name";
+          document.getElementById("profileEmailDisplay").textContent =
+            profile.email;
+          document.getElementById("navbarUserName").textContent = profile.name;
+          document.getElementById("mobileUserName").textContent = profile.name;
+        } catch (error) {
+          console.error("Error loading profile:", error);
+          ui.showToast("Failed to load profile", "error");
+        }
+      }
+
+      // Handle form submission
+      document
+        .getElementById("profileForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const profileData = {
+            name: document.getElementById("name").value,
+            dob: document.getElementById("dob").value || null,
+            height: parseFloat(document.getElementById("height").value) || null,
+            weight: parseFloat(document.getElementById("weight").value) || null,
+            mobile: document.getElementById("mobile").value || null,
+            medical_history:
+              document.getElementById("medicalHistory").value || null,
+          };
+
+          try {
+            await api.put("/api/client/profile", profileData);
+            ui.showToast("✅ Profile updated successfully!", "success");
+
+            // Update local storage
+            const updatedUser = { ...user, name: profileData.name };
+            localStorage.setItem("user_data", JSON.stringify(updatedUser));
+
+            // Reload profile
+            loadProfile();
+          } catch (error) {
+            ui.showToast(error.message || "Failed to update profile", "error");
+          }
+        });
+
+      // Load profile on page load
+      loadProfile();
+    </script>
+  </body>
+</html>

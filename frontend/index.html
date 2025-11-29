@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>FITSMATE | Evidence Driven Transformation</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto:wght@300;400;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #050505;
+        --bg-secondary: #0a0a0a;
+        --red: #ff0000;
+        --red-dark: #cc0000;
+        --red-glow: rgba(255, 0, 0, 0.5);
+        --text: #ffffff;
+        --text-muted: #cccccc;
+        --glass: rgba(20, 20, 20, 0.6);
+        --glass-border: rgba(255, 255, 255, 0.1);
+        --nav-height: 80px;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: "Roboto", sans-serif;
+        overflow-x: hidden;
+        line-height: 1.6;
+      }
+
+      /* Typography */
+      h1,
+      h2,
+      h3,
+      .brand-font {
+        font-family: "Bebas Neue", sans-serif;
+        letter-spacing: 2px;
+      }
+      .text-gradient {
+        background: linear-gradient(90deg, #fff, var(--red));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
+      /* Navbar */
+      .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: var(--nav-height);
+        background: rgba(5, 5, 5, 0.9);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid var(--glass-border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 5%;
+        z-index: 1000;
+        transition: 0.3s;
+      }
+
+      .nav-brand {
+        font-size: 32px;
+        font-weight: 900;
+        color: var(--text);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .nav-brand span {
+        color: var(--red);
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 30px;
+      }
+
+      .nav-links a {
+        color: var(--text);
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 16px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: 0.3s;
+        position: relative;
+      }
+
+      .nav-links a::after {
+        content: "";
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--red);
+        transition: 0.3s;
+      }
+
+      .nav-links a:hover::after {
+        width: 100%;
+      }
+      .nav-links a:hover {
+        color: var(--red);
+      }
+
+      .nav-btn {
+        background: var(--red);
+        color: #fff;
+        padding: 8px 20px;
+        border-radius: 30px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: 0.3s;
+        border: 2px solid var(--red);
+      }
+
+      .nav-btn:hover {
+        background: transparent;
+        color: var(--red);
+        box-shadow: 0 0 15px var(--red-glow);
+      }
+
+      /* Mobile Menu Toggle */
+      /* Hamburger Menu Button */
+      .hamburger-btn {
+        display: none;
+        flex-direction: column;
+        gap: 5px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        z-index: 1001;
+        transition: transform 0.3s;
+      }
+
+      .hamburger-btn:hover {
+        transform: scale(1.1);
+      }
+
+      .hamburger-btn span {
+        width: 24px;
+        height: 2px;
+        background: #fff;
+        border-radius: 2px;
+        transition: all 0.3s;
+      }
+
+      .hamburger-btn.active span:nth-child(1) {
+        transform: rotate(45deg) translate(7px, 7px);
+        background: var(--red);
+      }
+
+      .hamburger-btn.active span:nth-child(2) {
+        opacity: 0;
+      }
+
+      .hamburger-btn.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(7px, -7px);
+        background: var(--red);
+      }
+
+      /* Mobile Menu Overlay */
+      .mobile-menu-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(4px);
+        z-index: 998;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s;
+      }
+
+      .mobile-menu-overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      /* Mobile Sidebar */
+      .mobile-sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: min(80vw, 320px);
+        background: rgba(10, 10, 10, 0.98);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-right: 1px solid var(--glass-border);
+        z-index: 999;
+        transform: translateX(-100%);
+        transition: transform 0.3s;
+        overflow-y: auto;
+        padding: 30px;
+        box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
+      }
+
+      .mobile-sidebar.active {
+        transform: translateX(0);
+      }
+
+      .mobile-sidebar-header {
+        padding-bottom: 20px;
+        border-bottom: 1px solid var(--glass-border);
+        margin-bottom: 30px;
+      }
+
+      .mobile-sidebar-logo {
+        font-size: 28px;
+        font-weight: 800;
+        color: #fff;
+        margin-bottom: 5px;
+        font-family: "Bebas Neue", sans-serif;
+        letter-spacing: 1px;
+      }
+
+      .mobile-sidebar-logo span {
+        color: var(--red);
+      }
+
+      .mobile-menu {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .mobile-menu-item {
+        margin-bottom: 15px;
+      }
+
+      .mobile-menu-link {
+        display: block;
+        padding: 12px 15px;
+        color: var(--text);
+        text-decoration: none;
+        font-weight: 500;
+        border-radius: 8px;
+        transition: all 0.3s;
+        position: relative;
+        overflow: hidden;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 14px;
+      }
+
+      .mobile-menu-link::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background: var(--red);
+        transform: scaleY(0);
+        transition: transform 0.3s;
+      }
+
+      .mobile-menu-link:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: #fff;
+        padding-left: 25px;
+      }
+
+      .mobile-menu-link:hover::before {
+        transform: scaleY(1);
+      }
+
+      /* Hero Section */
+      .hero {
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        position: relative;
+        padding: 0 20px;
+        margin-top: 0; /* Reset margin */
+        background: url("Resources/background_img.JPG") no-repeat center
+          center/cover;
+      }
+
+      .hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.7),
+          rgba(0, 0, 0, 0.9)
+        );
+      }
+
+      .hero-content {
+        position: relative;
+        z-index: 1;
+        max-width: 800px;
+        animation: fadeInUp 1s ease-out;
+      }
+
+      .hero-subtitle {
+        font-size: 20px;
+        letter-spacing: 5px;
+        color: var(--red);
+        margin-bottom: 10px;
+        font-weight: 700;
+      }
+
+      .hero-title {
+        font-size: 80px;
+        line-height: 1;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+      }
+
+      .hero-desc {
+        font-size: 18px;
+        color: var(--text-muted);
+        margin-bottom: 40px;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .hero-btns {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+      }
+
+      .btn {
+        padding: 10px 28px;
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        border-radius: 30px;
+        text-decoration: none;
+        text-transform: uppercase;
+        transition: 0.3s;
+        cursor: pointer;
+      }
+
+      .btn-primary {
+        background: var(--red);
+        color: #fff;
+        border: 2px solid var(--red);
+      }
+
+      .btn-primary:hover {
+        background: transparent;
+        color: var(--red);
+        box-shadow: 0 0 20px var(--red-glow);
+      }
+
+      .btn-outline {
+        background: transparent;
+        color: #fff;
+        border: 2px solid #fff;
+      }
+
+      .btn-outline:hover {
+        background: #fff;
+        color: #000;
+      }
+
+      /* Section Common */
+      section {
+        padding: 100px 5%;
+        position: relative;
+      }
+
+      .section-head {
+        text-align: center;
+        margin-bottom: 60px;
+      }
+
+      .section-subtitle {
+        color: var(--red);
+        font-weight: 700;
+        letter-spacing: 3px;
+        font-size: 14px;
+        display: block;
+        margin-bottom: 10px;
+      }
+
+      .section-title {
+        font-size: 50px;
+        margin-bottom: 15px;
+      }
+
+      .section-line {
+        width: 80px;
+        height: 4px;
+        background: var(--red);
+        margin: 0 auto;
+        border-radius: 2px;
+      }
+
+      /* Stats */
+      .stats {
+        background: var(--bg-secondary);
+        padding: 60px 5%;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        gap: 30px;
+        border-top: 1px solid #222;
+        border-bottom: 1px solid #222;
+      }
+
+      .stat-item {
+        text-align: center;
+      }
+
+      .stat-num {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 60px;
+        color: var(--red);
+        line-height: 1;
+      }
+
+      .stat-label {
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+
+      /* About / Coach */
+      .about-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 40px;
+        align-items: center;
+      }
+
+      .coach-card {
+        background: var(--bg-secondary);
+        border: 1px solid #222;
+        border-radius: 20px;
+        overflow: hidden;
+        transition: 0.3s;
+      }
+
+      .coach-card:hover {
+        transform: translateY(-10px);
+        border-color: var(--red);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      }
+
+      .coach-img {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+        object-position: top;
+      }
+
+      .coach-info {
+        padding: 25px;
+      }
+
+      .coach-name {
+        font-size: 28px;
+        margin-bottom: 5px;
+        color: #fff;
+      }
+
+      .coach-role {
+        color: var(--red);
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 15px;
+        display: block;
+      }
+
+      .coach-desc {
+        font-size: 14px;
+        color: var(--text-muted);
+      }
+
+      /* Services */
+      .services-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+      }
+
+      .service-card {
+        background: rgba(255, 255, 255, 0.03);
+        padding: 40px 30px;
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        transition: 0.3s;
+        text-align: center;
+      }
+
+      .service-card:hover {
+        background: rgba(255, 0, 0, 0.05);
+        border-color: var(--red);
+        transform: translateY(-5px);
+      }
+
+      .service-icon {
+        font-size: 40px;
+        margin-bottom: 20px;
+        display: inline-block;
+      }
+
+      .service-title {
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+      }
+
+      .service-text {
+        font-size: 14px;
+        color: var(--text-muted);
+      }
+
+      /* Packages */
+      .packages-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 30px;
+      }
+
+      .package-card {
+        background: var(--bg-secondary);
+        border: 1px solid #333;
+        border-radius: 20px;
+        padding: 40px;
+        position: relative;
+        transition: 0.3s;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .package-card.featured {
+        border-color: var(--red);
+        background: linear-gradient(145deg, #1a0000, #0a0000);
+        transform: scale(1.05);
+        z-index: 1;
+      }
+
+      .badge {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: var(--red);
+        color: #fff;
+        padding: 5px 12px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+
+      .pkg-name {
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 10px;
+        font-family: "Bebas Neue", sans-serif;
+        letter-spacing: 1px;
+      }
+
+      .pkg-price {
+        font-size: 48px;
+        font-family: "Bebas Neue", sans-serif;
+        color: var(--red);
+        margin-bottom: 20px;
+      }
+
+      .pkg-features {
+        list-style: none;
+        margin-bottom: 30px;
+        flex: 1;
+      }
+
+      .pkg-features li {
+        margin-bottom: 12px;
+        font-size: 14px;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .pkg-features li::before {
+        content: "✓";
+        color: var(--red);
+        font-weight: 900;
+      }
+
+      .pkg-btn {
+        width: 100%;
+        text-align: center;
+        display: block;
+        padding: 12px;
+        border: 1px solid #444;
+        border-radius: 30px;
+        color: #fff;
+        text-decoration: none;
+        font-weight: 700;
+        transition: 0.3s;
+      }
+
+      .featured .pkg-btn {
+        background: var(--red);
+        border-color: var(--red);
+      }
+
+      .pkg-btn:hover {
+        background: #fff;
+        color: #000;
+      }
+
+      /* Gallery */
+      .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+      }
+
+      .gallery-item {
+        position: relative;
+        border-radius: 15px;
+        overflow: hidden;
+        aspect-ratio: 3/4;
+      }
+
+      .gallery-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: 0.5s;
+      }
+
+      .gallery-item:hover img {
+        transform: scale(1.1);
+      }
+
+      .gallery-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 20px;
+        opacity: 0;
+        transition: 0.3s;
+      }
+
+      .gallery-item:hover .gallery-overlay {
+        opacity: 1;
+      }
+
+      .gallery-title {
+        color: var(--red);
+        font-weight: 900;
+        font-size: 18px;
+        text-transform: uppercase;
+      }
+
+      .gallery-desc {
+        font-size: 12px;
+        color: #ddd;
+      }
+
+      /* Contact */
+      .contact-section {
+        background: linear-gradient(to right, #0a0a0a, #000);
+        padding: 80px 5%;
+        border-top: 1px solid #222;
+      }
+
+      .contact-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid #222;
+        border-radius: 20px;
+        padding: 50px;
+        text-align: center;
+      }
+
+      .contact-info {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 40px;
+        margin: 40px 0;
+      }
+
+      .contact-box {
+        text-align: center;
+      }
+
+      .contact-box i {
+        font-size: 24px;
+        color: var(--red);
+        margin-bottom: 10px;
+        display: block;
+      }
+
+      .contact-box span {
+        font-size: 16px;
+        color: #fff;
+        font-weight: 700;
+      }
+
+      .contact-box p {
+        font-size: 14px;
+        color: var(--text-muted);
+      }
+
+      /* Footer */
+      footer {
+        background: #000;
+        padding: 30px 5%;
+        text-align: center;
+        border-top: 1px solid #111;
+        font-size: 14px;
+        color: #666;
+      }
+
+      /* Animations */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .navbar {
+          padding: 0 15px;
+        }
+
+        .nav-links {
+          display: none;
+        }
+
+        .hamburger-btn {
+          display: flex;
+          order: 1;
+        }
+
+        .nav-brand {
+          order: 2;
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+        }
+
+        .nav-btn {
+          order: 3;
+          padding: 6px 16px;
+          font-size: 12px;
+        }
+
+        .hero-title {
+          font-size: 50px;
+        }
+        .section-title {
+          font-size: 40px;
+        }
+
+        .package-card.featured {
+          transform: scale(1);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <a href="#" class="nav-brand">
+        <img
+          src="Resources/fitsMate_logo.jpg"
+          alt="FITSMATE"
+          style="height: 50px"
+        />
+      </a>
+      <div class="nav-links">
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#services">Services</a>
+        <a href="#packages">Packages</a>
+        <a href="#transformations">Transformations</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <a href="login.html" class="nav-btn">Login</a>
+      <button class="hamburger-btn" id="hamburgerBtn">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+
+    <!-- Mobile Sidebar -->
+    <aside class="mobile-sidebar" id="mobileSidebar">
+      <div class="mobile-sidebar-header">
+        <div class="mobile-sidebar-logo">FITS<span>MATE</span></div>
+      </div>
+
+      <nav>
+        <ul class="mobile-menu">
+          <li class="mobile-menu-item">
+            <a href="#home" class="mobile-menu-link">Home</a>
+          </li>
+          <li class="mobile-menu-item">
+            <a href="#about" class="mobile-menu-link">About</a>
+          </li>
+          <li class="mobile-menu-item">
+            <a href="#services" class="mobile-menu-link">Services</a>
+          </li>
+          <li class="mobile-menu-item">
+            <a href="#packages" class="mobile-menu-link">Packages</a>
+          </li>
+          <li class="mobile-menu-item">
+            <a href="#transformations" class="mobile-menu-link"
+              >Transformations</a
+            >
+          </li>
+          <li class="mobile-menu-item">
+            <a href="#contact" class="mobile-menu-link">Contact</a>
+          </li>
+          <li class="mobile-menu-item">
+            <a href="login.html" class="mobile-menu-link">Login</a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Hero -->
+    <header id="home" class="hero">
+      <div class="hero-content">
+        <div class="hero-subtitle">WELCOME TO THE ELITE</div>
+        <h1 class="hero-title">
+          EVIDENCE DRIVEN <span class="text-gradient">TRANSFORMATION</span>
+        </h1>
+        <p class="hero-desc">
+          Stop guessing. Start progressing. Science-based coaching tailored to
+          your unique physiology and goals.
+        </p>
+        <div class="hero-btns">
+          <a href="#packages" class="btn btn-primary">Start Now</a>
+          <a href="#about" class="btn btn-outline">Learn More</a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Stats -->
+    <div class="stats">
+      <div class="stat-item">
+        <div class="stat-num">2x</div>
+        <div class="stat-label">District Champ</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">5+</div>
+        <div class="stat-label">Years Experience</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">100%</div>
+        <div class="stat-label">Evidence Based</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">0%</div>
+        <div class="stat-label">Gimmicks</div>
+      </div>
+    </div>
+
+    <!-- About -->
+    <section id="about">
+      <div class="section-head">
+        <span class="section-subtitle">THE EXPERT</span>
+        <h2 class="section-title">MEET YOUR COACH</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="about-grid">
+        <div class="coach-card">
+          <img
+            src="Resources/background_img.JPG"
+            alt="Babai Ghosh"
+            class="coach-img"
+          />
+          <div class="coach-info">
+            <h3 class="coach-name">BABAI GHOSH</h3>
+            <span class="coach-role">HEAD COACH & FOUNDER</span>
+            <p class="coach-desc">
+              Certified Strength & Conditioning coach applying elite programming
+              to all levels. My approach is simple: Data over dogma, results
+              over hype.
+            </p>
+          </div>
+        </div>
+        <div class="coach-card">
+          <img src="Resources/gemini-1.jpg" alt="Precision" class="coach-img" />
+          <div class="coach-info">
+            <h3 class="coach-name">PRECISION</h3>
+            <span class="coach-role">TECHNIQUE SPECIALIST</span>
+            <p class="coach-desc">
+              Biomechanics focused technique refinement for joint safety and
+              maximal hypertrophy stimulus. Every rep counts.
+            </p>
+          </div>
+        </div>
+        <div class="coach-card">
+          <img src="Resources/gemini-2.jpg" alt="Focus" class="coach-img" />
+          <div class="coach-info">
+            <h3 class="coach-name">FOCUS</h3>
+            <span class="coach-role">MINDSET COACH</span>
+            <p class="coach-desc">
+              Mind-muscle engagement strategies and progressive overload
+              periodization. We build mental resilience alongside physical
+              strength.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Services -->
+    <section id="services">
+      <div class="section-head">
+        <span class="section-subtitle">WHAT WE DO</span>
+        <h2 class="section-title">OUR SERVICES</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="service-icon">💪</div>
+          <h3 class="service-title">Personal Training</h3>
+          <p class="service-text">
+            Hands-on form correction and individualized session programming to
+            accelerate strength gains.
+          </p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">🏋️</div>
+          <h3 class="service-title">Online Coaching</h3>
+          <p class="service-text">
+            Remote periodized plans, video feedback and adaptive progression
+            without geographical limits.
+          </p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">🥗</div>
+          <h3 class="service-title">Nutrition Strategy</h3>
+          <p class="service-text">
+            Macronutrient calibration and habit structuring for sustainable body
+            recomposition & recovery.
+          </p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">🔄</div>
+          <h3 class="service-title">Rehabilitation</h3>
+          <p class="service-text">
+            Return-to-performance protocols integrating mobility, stability and
+            graded strength rebuild.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Packages -->
+    <section id="packages">
+      <div class="section-head">
+        <span class="section-subtitle">INVEST IN YOURSELF</span>
+        <h2 class="section-title">CHOOSE YOUR PLAN</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="packages-grid">
+        <div class="package-card">
+          <div class="pkg-name">STANDARD</div>
+          <div class="pkg-price">₹2,000</div>
+          <ul class="pkg-features">
+            <li>3 Offline + 4 Online Weekly</li>
+            <li>Monthly Diet Update</li>
+            <li>WhatsApp Support</li>
+          </ul>
+          <a href="#contact" class="pkg-btn">Select Plan</a>
+        </div>
+        <div class="package-card featured">
+          <div class="badge">BEST VALUE</div>
+          <div class="pkg-name">ELITE</div>
+          <div class="pkg-price">₹4,000</div>
+          <ul class="pkg-features">
+            <li>2 Calls + 5 Sessions</li>
+            <li>Weekly Diet Adjust</li>
+            <li>Form Correction</li>
+            <li>Priority Access</li>
+          </ul>
+          <a href="#contact" class="pkg-btn">Select Plan</a>
+        </div>
+        <div class="package-card">
+          <div class="pkg-name">PREMIUM</div>
+          <div class="pkg-price">₹3,000</div>
+          <ul class="pkg-features">
+            <li>2 Coach Calls + 4 Gym</li>
+            <li>Bi-Weekly Diet Adjust</li>
+            <li>Progress Tracking</li>
+          </ul>
+          <a href="#contact" class="pkg-btn">Select Plan</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Transformations -->
+    <section id="transformations">
+      <div class="section-head">
+        <span class="section-subtitle">REAL RESULTS</span>
+        <h2 class="section-title">TRANSFORMATIONS</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="gallery-grid">
+        <div class="gallery-item">
+          <img src="Resources/client-1.jpg" alt="Transformation" />
+          <div class="gallery-overlay">
+            <div class="gallery-title">12KG LOSS</div>
+            <div class="gallery-desc">
+              Strategic deficit + structured resistance training.
+            </div>
+          </div>
+        </div>
+        <div class="gallery-item">
+          <img src="Resources/client-2.jpg" alt="Transformation" />
+          <div class="gallery-overlay">
+            <div class="gallery-title">REHAB SUCCESS</div>
+            <div class="gallery-desc">
+              Mobility restoration & progressive loading.
+            </div>
+          </div>
+        </div>
+        <div class="gallery-item">
+          <img src="Resources/client-3.jpg" alt="Transformation" />
+          <div class="gallery-overlay">
+            <div class="gallery-title">ATHLETIC PEAK</div>
+            <div class="gallery-desc">
+              Speed & explosive power optimization.
+            </div>
+          </div>
+        </div>
+        <div class="gallery-item">
+          <img src="Resources/client-4.jpg" alt="Transformation" />
+          <div class="gallery-overlay">
+            <div class="gallery-title">BODY RECOMP</div>
+            <div class="gallery-desc">
+              Lean mass retention through evidence-based approach.
+            </div>
+          </div>
+        </div>
+        <div class="gallery-item">
+          <img src="Resources/client-5.jpg" alt="Transformation" />
+          <div class="gallery-overlay">
+            <div class="gallery-title">POSTURE & FORM</div>
+            <div class="gallery-desc">
+              Technique refinement reducing joint stress.
+            </div>
+          </div>
+        </div>
+        <div class="gallery-item">
+          <img src="Resources/client-6.jpg" alt="Transformation" />
+          <div class="gallery-overlay">
+            <div class="gallery-title">YOUTH FAT LOSS</div>
+            <div class="gallery-desc">
+              Guided approach emphasizing safe progression.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="contact-section">
+      <div class="section-head">
+        <span class="section-subtitle">GET STARTED</span>
+        <h2 class="section-title">CONTACT US</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="contact-container">
+        <h2>READY TO TRANSFORM?</h2>
+        <p style="color: #ccc; margin-top: 10px">
+          No Gimmicks. Just Scientific Progression.
+        </p>
+
+        <div class="contact-info">
+          <div class="contact-box">
+            <i>📍</i>
+            <span>LOCATION</span>
+            <p>Durganagar, Uttar Badra<br />Kolkata (700079)</p>
+          </div>
+          <div class="contact-box">
+            <i>📞</i>
+            <span>CALL / WHATSAPP</span>
+            <p>+91 90648 67473</p>
+          </div>
+          <div class="contact-box">
+            <i>✉️</i>
+            <span>EMAIL</span>
+            <p>gamezila356@gmail.com</p>
+          </div>
+        </div>
+
+        <a
+          href="https://wa.me/919064867473"
+          class="btn btn-primary"
+          style="display: inline-block"
+          >Chat on WhatsApp</a
+        >
+      </div>
+    </section>
+
+    <footer>
+      <p>&copy; 2025 FITSMATE. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+      const hamburgerBtn = document.getElementById("hamburgerBtn");
+      const mobileSidebar = document.getElementById("mobileSidebar");
+      const mobileMenuOverlay = document.getElementById("mobileMenuOverlay");
+      const mobileMenuLinks = document.querySelectorAll(".mobile-menu-link");
+
+      function toggleMenu() {
+        hamburgerBtn.classList.toggle("active");
+        mobileSidebar.classList.toggle("active");
+        mobileMenuOverlay.classList.toggle("active");
+        document.body.style.overflow = mobileSidebar.classList.contains(
+          "active"
+        )
+          ? "hidden"
+          : "";
+      }
+
+      function closeMenu() {
+        hamburgerBtn.classList.remove("active");
+        mobileSidebar.classList.remove("active");
+        mobileMenuOverlay.classList.remove("active");
+        document.body.style.overflow = "";
+      }
+
+      hamburgerBtn.addEventListener("click", toggleMenu);
+      mobileMenuOverlay.addEventListener("click", closeMenu);
+
+      mobileMenuLinks.forEach((link) => {
+        link.addEventListener("click", closeMenu);
+      });
+    </script>
+  </body>
+</html>

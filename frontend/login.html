@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - FitMates V2</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/assets/css/common.css" />
+    <style>
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        background: linear-gradient(
+          135deg,
+          #0a0a0a 0%,
+          #1a1a1a 50%,
+          #0a0a0a 100%
+        );
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* Animated background */
+      body::before {
+        content: "";
+        position: absolute;
+        width: 500px;
+        height: 500px;
+        background: radial-gradient(
+          circle,
+          rgba(239, 68, 68, 0.1) 0%,
+          transparent 70%
+        );
+        border-radius: 50%;
+        top: -250px;
+        right: -250px;
+        animation: float 20s ease-in-out infinite;
+      }
+
+      body::after {
+        content: "";
+        position: absolute;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(
+          circle,
+          rgba(239, 68, 68, 0.08) 0%,
+          transparent 70%
+        );
+        border-radius: 50%;
+        bottom: -200px;
+        left: -200px;
+        animation: float 15s ease-in-out infinite reverse;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translate(0, 0);
+        }
+        50% {
+          transform: translate(50px, 50px);
+        }
+      }
+
+      .login-container {
+        position: relative;
+        z-index: 1;
+        width: min(90vw, 450px);
+        padding: max(var(--spacing-vw-sm), var(--spacing-lg));
+      }
+
+      .login-card {
+        background: rgba(26, 26, 26, 0.95);
+        backdrop-filter: blur(30px);
+        -webkit-backdrop-filter: blur(30px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: var(--radius-2xl);
+        padding: max(var(--spacing-vw-md), var(--spacing-2xl));
+        box-shadow: var(--shadow-2xl);
+        animation: slideUp 0.6s ease-out;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .login-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--gradient-accent);
+        animation: shimmer 2s infinite;
+      }
+
+      .logo {
+        text-align: center;
+        margin-bottom: var(--spacing-2xl);
+      }
+
+      .logo h1 {
+        font-size: 2.5rem;
+        background: var(--gradient-accent);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: var(--spacing-sm);
+      }
+
+      .logo p {
+        color: var(--color-text-tertiary);
+        font-size: 0.875rem;
+      }
+
+      .form-title {
+        font-size: 1.5rem;
+        margin-bottom: var(--spacing-xl);
+        text-align: center;
+      }
+
+      .login-form .input-group {
+        margin-bottom: var(--spacing-lg);
+      }
+
+      .login-form .input {
+        transition: all var(--transition-normal);
+      }
+
+      .login-form .input:focus {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+      }
+
+      .login-form .btn {
+        width: 100%;
+        padding: var(--spacing-md);
+        font-size: 1rem;
+        margin-top: var(--spacing-md);
+        transition: all var(--transition-normal);
+      }
+
+      .login-form .btn:hover {
+        transform: translateY(-2px) scale(1.02);
+      }
+
+      .divider {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-md);
+        margin: var(--spacing-xl) 0;
+        color: var(--color-text-tertiary);
+        font-size: 0.875rem;
+      }
+
+      .divider::before,
+      .divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--color-border);
+      }
+
+      .demo-credentials {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.2);
+        border-radius: var(--radius-md);
+        padding: var(--spacing-md);
+        margin-top: var(--spacing-xl);
+      }
+
+      .demo-credentials h4 {
+        font-size: 0.875rem;
+        color: var(--color-accent-red);
+        margin-bottom: var(--spacing-sm);
+      }
+
+      .demo-credentials p {
+        font-size: 0.75rem;
+        color: var(--color-text-secondary);
+        margin-bottom: var(--spacing-xs);
+        font-family: var(--font-mono);
+      }
+
+      .error-message {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid var(--color-error);
+        color: var(--color-error);
+        padding: var(--spacing-md);
+        border-radius: var(--radius-md);
+        margin-bottom: var(--spacing-lg);
+        font-size: 0.875rem;
+        display: none;
+      }
+
+      .error-message.active {
+        display: block;
+        animation: slideDown 0.3s ease-out;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="login-container">
+      <div class="login-card">
+        <div class="logo">
+          <h1>FitMates</h1>
+          <p>Fitness Client Management System</p>
+        </div>
+
+        <h2 class="form-title">Welcome Back</h2>
+
+        <div id="errorMessage" class="error-message"></div>
+
+        <form id="loginForm" class="login-form">
+          <div class="input-group">
+            <label class="input-label" for="email">Email Address</label>
+            <input
+              type="email"
+              id="email"
+              class="input"
+              placeholder="Enter your email"
+              required
+              autocomplete="email"
+            />
+          </div>
+
+          <div class="input-group">
+            <label class="input-label" for="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              class="input"
+              placeholder="Enter your password"
+              required
+              autocomplete="current-password"
+            />
+          </div>
+
+          <button type="submit" class="btn btn-primary" id="loginBtn">
+            <span id="loginBtnText">Sign In</span>
+            <div
+              id="loginSpinner"
+              class="spinner spinner-sm hidden"
+              style="margin: 0"
+            ></div>
+          </button>
+        </form>
+
+        <div class="demo-credentials">
+          <h4>Demo Credentials</h4>
+          <p><strong>Admin:</strong> admin@fitmates.com / admin123</p>
+          <p><strong>Client:</strong> john@example.com / client123</p>
+        </div>
+      </div>
+    </div>
+
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/auth.js"></script>
+    <script src="/assets/js/utils.js"></script>
+    <script>
+      // Redirect if already logged in
+      if (api.isAuthenticated()) {
+        auth.redirectByRole();
+      }
+
+      const loginForm = document.getElementById("loginForm");
+      const emailInput = document.getElementById("email");
+      const passwordInput = document.getElementById("password");
+      const loginBtn = document.getElementById("loginBtn");
+      const loginBtnText = document.getElementById("loginBtnText");
+      const loginSpinner = document.getElementById("loginSpinner");
+      const errorMessage = document.getElementById("errorMessage");
+
+      // Show error message
+      function showError(message) {
+        errorMessage.textContent = message;
+        errorMessage.classList.add("active");
+        setTimeout(() => {
+          errorMessage.classList.remove("active");
+        }, 5000);
+      }
+
+      // Handle form submission
+      loginForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const email = emailInput.value.trim();
+        const password = passwordInput.value;
+
+        if (!email || !password) {
+          showError("Please enter both email and password");
+          return;
+        }
+
+        // Show loading state
+        loginBtn.disabled = true;
+        loginBtnText.classList.add("hidden");
+        loginSpinner.classList.remove("hidden");
+
+        try {
+          const response = await api.login(email, password);
+
+          // Redirect based on role
+          if (response.role === "admin") {
+            window.location.href = "/admin/dashboard.html";
+          } else if (response.role === "client") {
+            window.location.href = "/user/dashboard.html";
+          }
+        } catch (error) {
+          showError(error.message || "Invalid email or password");
+
+          // Reset button state
+          loginBtn.disabled = false;
+          loginBtnText.classList.remove("hidden");
+          loginSpinner.classList.add("hidden");
+        }
+      });
+
+      // Quick login buttons (for demo)
+      document.addEventListener("keydown", (e) => {
+        // Alt + A for admin
+        if (e.altKey && e.key === "a") {
+          emailInput.value = "admin@fitmates.com";
+          passwordInput.value = "admin123";
+        }
+        // Alt + C for client
+        if (e.altKey && e.key === "c") {
+          emailInput.value = "john@example.com";
+          passwordInput.value = "client123";
+        }
+      });
+    </script>
+  </body>
+</html>

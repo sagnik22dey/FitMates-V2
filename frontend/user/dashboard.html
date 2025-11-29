@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - FitMates</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/assets/css/common.css" />
+    <link rel="stylesheet" href="/assets/css/navbar.css" />
+    <link rel="stylesheet" href="/assets/css/user.css" />
+    <style>
+      .hero-section {
+        background: linear-gradient(
+          135deg,
+          rgba(239, 68, 68, 0.1) 0%,
+          rgba(0, 0, 0, 0.8) 100%
+        );
+        border-radius: var(--radius-xl);
+        padding: var(--spacing-2xl);
+        margin-bottom: var(--spacing-2xl);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero-section::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(
+          circle,
+          rgba(239, 68, 68, 0.15) 0%,
+          transparent 70%
+        );
+        animation: pulse 4s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 0.5;
+        }
+        50% {
+          transform: scale(1.1);
+          opacity: 0.8;
+        }
+      }
+
+      .hero-content {
+        position: relative;
+        z-index: 1;
+      }
+
+      .hero-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: var(--spacing-md);
+        background: linear-gradient(135deg, #ffffff 0%, #ef4444 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .hero-subtitle {
+        font-size: 1.125rem;
+        color: var(--color-text-secondary);
+        font-weight: 300;
+      }
+
+      .quick-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: var(--spacing-lg);
+        margin-bottom: var(--spacing-2xl);
+      }
+
+      .quick-stat {
+        background: linear-gradient(
+          135deg,
+          rgba(239, 68, 68, 0.05) 0%,
+          rgba(26, 26, 26, 0.9) 100%
+        );
+        border: 1px solid rgba(239, 68, 68, 0.2);
+        border-radius: var(--radius-lg);
+        padding: var(--spacing-xl);
+        text-align: center;
+        transition: all var(--transition-normal);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .quick-stat::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(239, 68, 68, 0.1),
+          transparent
+        );
+        transition: left 0.5s;
+      }
+
+      .quick-stat:hover::before {
+        left: 100%;
+      }
+
+      .quick-stat:hover {
+        transform: translateY(-8px);
+        border-color: var(--color-accent-red);
+        box-shadow: 0 20px 40px rgba(239, 68, 68, 0.3);
+      }
+
+      .quick-stat-icon {
+        font-size: 2.5rem;
+        margin-bottom: var(--spacing-sm);
+      }
+
+      .quick-stat-value {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--color-accent-red);
+        margin-bottom: var(--spacing-xs);
+      }
+
+      .quick-stat-label {
+        font-size: 0.875rem;
+        color: var(--color-text-tertiary);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-weight: 600;
+      }
+
+      .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--spacing-xl);
+      }
+
+      .section-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-md);
+      }
+
+      .section-title::before {
+        content: "";
+        width: 4px;
+        height: 2rem;
+        background: var(--gradient-accent);
+        border-radius: 2px;
+      }
+
+      .form-card-new {
+        background: linear-gradient(
+          135deg,
+          rgba(26, 26, 26, 0.95) 0%,
+          rgba(10, 10, 10, 0.98) 100%
+        );
+        border: 1px solid rgba(239, 68, 68, 0.15);
+        border-radius: var(--radius-xl);
+        padding: var(--spacing-2xl);
+        cursor: pointer;
+        transition: all var(--transition-normal);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .form-card-new::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: var(--gradient-accent);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform var(--transition-normal);
+      }
+
+      .form-card-new:hover::before {
+        transform: scaleX(1);
+      }
+
+      .form-card-new:hover {
+        transform: translateY(-12px) scale(1.02);
+        border-color: var(--color-accent-red);
+        box-shadow: 0 25px 50px rgba(239, 68, 68, 0.25);
+      }
+
+      .form-card-header {
+        display: flex;
+        align-items: flex-start;
+        gap: var(--spacing-lg);
+        margin-bottom: var(--spacing-lg);
+      }
+
+      .form-card-icon {
+        width: 60px;
+        height: 60px;
+        background: var(--gradient-accent);
+        border-radius: var(--radius-md);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.75rem;
+        flex-shrink: 0;
+      }
+
+      .form-card-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: var(--spacing-xs);
+      }
+
+      .form-card-meta {
+        font-size: 0.875rem;
+        color: var(--color-text-tertiary);
+      }
+
+      .form-card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: var(--spacing-lg);
+        border-top: 1px solid rgba(239, 68, 68, 0.1);
+      }
+
+      .form-card-action {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        color: var(--color-accent-red);
+        font-weight: 600;
+        font-size: 0.875rem;
+      }
+
+      .report-card-new {
+        background: linear-gradient(
+          135deg,
+          rgba(26, 26, 26, 0.95) 0%,
+          rgba(10, 10, 10, 0.98) 100%
+        );
+        border: 1px solid rgba(239, 68, 68, 0.15);
+        border-radius: var(--radius-xl);
+        padding: var(--spacing-2xl);
+        transition: all var(--transition-normal);
+      }
+
+      .report-card-new:hover {
+        transform: translateY(-4px);
+        border-color: var(--color-accent-red);
+        box-shadow: 0 15px 30px rgba(239, 68, 68, 0.2);
+      }
+
+      .report-score-circle {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: conic-gradient(
+          var(--color-accent-red) 0% var(--score-percent),
+          rgba(239, 68, 68, 0.1) var(--score-percent) 100%
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto var(--spacing-lg);
+        position: relative;
+      }
+
+      .report-score-circle::before {
+        content: "";
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        background: var(--color-bg-card);
+        border-radius: 50%;
+      }
+
+      .report-score-value {
+        position: relative;
+        z-index: 1;
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--color-accent-red);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Top Navbar -->
+    <nav class="top-navbar">
+      <div class="navbar-container">
+        <button class="hamburger-btn" id="hamburgerBtn">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <a href="/user/dashboard.html" class="navbar-brand">
+          <div>
+            <div class="navbar-logo">FitMates</div>
+            <p class="navbar-subtitle">Client Portal</p>
+          </div>
+        </a>
+
+        <ul class="navbar-menu">
+          <li class="navbar-menu-item">
+            <a href="/user/dashboard.html" class="navbar-menu-link active">
+              <span>🏠</span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li class="navbar-menu-item">
+            <a href="/user/submissions.html" class="navbar-menu-link">
+              <span>📝</span>
+              <span>Submissions</span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="navbar-actions">
+          <div class="navbar-user">
+            <div class="navbar-avatar" id="navbarAvatar">C</div>
+            <div class="navbar-user-info">
+              <div class="navbar-user-name" id="navbarUserName">Client</div>
+              <div class="navbar-user-role">Member</div>
+            </div>
+            <!-- Dropdown Menu -->
+            <div class="user-dropdown">
+              <a href="/user/profile.html" class="user-dropdown-item">
+                <span>👤</span>
+                <span>Visit Profile</span>
+              </a>
+              <a href="#" class="user-dropdown-item" onclick="event.preventDefault(); auth.logout();">
+                <span>🚪</span>
+                <span>Logout</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+
+    <!-- Mobile Sidebar -->
+    <aside class="mobile-sidebar" id="mobileSidebar">
+      <div class="mobile-sidebar-header">
+        <div class="mobile-sidebar-logo">FitMates</div>
+        <p class="mobile-sidebar-subtitle">Client Portal</p>
+      </div>
+
+      <nav>
+        <ul class="mobile-menu">
+          <li class="mobile-menu-item">
+            <a href="/user/dashboard.html" class="mobile-menu-link active">
+              <span class="mobile-menu-icon">🏠</span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li class="mobile-menu-item">
+            <a href="/user/submissions.html" class="mobile-menu-link">
+              <span class="mobile-menu-icon">📝</span>
+              <span>Submissions</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="mobile-sidebar-footer">
+        <div class="user-info">
+          <div class="user-avatar" id="mobileUserAvatar">C</div>
+          <div class="user-details">
+            <h4 id="mobileUserName">Client</h4>
+            <p id="mobileUserEmail">client@example.com</p>
+          </div>
+        </div>
+        <button
+          class="btn btn-secondary"
+          style="width: 100%"
+          onclick="auth.logout()"
+        >
+          Logout
+        </button>
+      </div>
+    </aside>
+
+    <div class="user-layout">
+      <!-- Desktop Sidebar (Hidden on Mobile) -->
+      <aside class="user-sidebar" id="desktopSidebar">
+          </ul>
+        </nav>
+
+        <div class="sidebar-footer">
+          <div class="user-info">
+            <div class="user-avatar" id="userAvatar">C</div>
+            <div class="user-details">
+              <h4 id="userName">Client</h4>
+              <p id="userEmail">client@example.com</p>
+            </div>
+          </div>
+          <button
+            class="btn btn-secondary"
+            style="width: 100%"
+            onclick="auth.logout()"
+          >
+            Logout
+          </button>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="user-main">
+        <!-- Hero Section -->
+        <div class="hero-section">
+          <div class="hero-content">
+            <h1 class="hero-title">
+              Welcome Back, <span id="welcomeName">Champion</span>! 🎯
+            </h1>
+            <p class="hero-subtitle">
+              Ready to crush your fitness goals today?
+            </p>
+          </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="quick-stats">
+          <div class="quick-stat">
+            <div class="quick-stat-icon">📋</div>
+            <div class="quick-stat-value" id="availableFormsCount">0</div>
+            <div class="quick-stat-label">Active Forms</div>
+          </div>
+          <div class="quick-stat">
+            <div class="quick-stat-icon">✅</div>
+            <div class="quick-stat-value" id="completedFormsCount">0</div>
+            <div class="quick-stat-label">Completed</div>
+          </div>
+          <div class="quick-stat">
+            <div class="quick-stat-icon">📊</div>
+            <div class="quick-stat-value" id="reportsCount">0</div>
+            <div class="quick-stat-label">Reports</div>
+          </div>
+          <div class="quick-stat">
+            <div class="quick-stat-icon">🔥</div>
+            <div class="quick-stat-value" id="streakCount">7</div>
+            <div class="quick-stat-label">Day Streak</div>
+          </div>
+        </div>
+
+        <!-- Available Forms -->
+        <div style="margin-bottom: var(--spacing-2xl)">
+          <div class="section-header">
+            <h2 class="section-title">Your Forms</h2>
+          </div>
+          <div id="formsContainer">
+            <div style="text-align: center; padding: 3rem">
+              <div class="spinner"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Reports -->
+        <div>
+          <div class="section-header">
+            <h2 class="section-title">Progress Reports</h2>
+          </div>
+          <div id="reportsContainer">
+            <div style="text-align: center; padding: 3rem">
+              <div class="spinner"></div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/auth.js"></script>
+    <script src="/assets/js/utils.js"></script>
+    <script src="/assets/js/navigation.js"></script>
+    <script>
+      // Require client authentication
+      auth.requireClient();
+
+      // Set user info in all locations
+      const user = auth.getCurrentUser();
+      if (user) {
+        const userName = user.name || "Champion";
+        const userEmail = user.email;
+        const userInitial = userName[0].toUpperCase();
+
+        // Desktop sidebar
+        document.getElementById("userName").textContent = userName;
+        document.getElementById("userEmail").textContent = userEmail;
+        document.getElementById("userAvatar").textContent = userInitial;
+
+        // Top navbar
+        document.getElementById("navbarUserName").textContent = userName;
+        document.getElementById("navbarAvatar").textContent = userInitial;
+
+        // Mobile sidebar
+        document.getElementById("mobileUserName").textContent = userName;
+        document.getElementById("mobileUserEmail").textContent = userEmail;
+        document.getElementById("mobileUserAvatar").textContent = userInitial;
+
+        // Welcome message
+        document.getElementById("welcomeName").textContent = userName;
+      }
+
+      const clientId = parseInt(user.id);
+      let allForms = [];
+      let allReports = [];
+
+      // Load data
+      async function loadData() {
+        try {
+          // Load forms and submissions in parallel
+          const [forms, submissions] = await Promise.all([
+            api.get(`/api/forms/published/${clientId}`),
+            api.get(`/api/forms/submissions/client/${clientId}`)
+          ]);
+
+          allForms = forms;
+          
+          // Create a set of submitted form IDs for quick lookup
+          const submittedFormIds = new Set(submissions.map(s => s.form_id));
+          
+          document.getElementById("availableFormsCount").textContent = allForms.length;
+          renderForms(allForms, submittedFormIds);
+        } catch (error) {
+          console.error("Error loading data:", error);
+          document.getElementById("formsContainer").innerHTML = "<p>Failed to load forms</p>";
+        }
+      }
+
+      // Render forms
+      function renderForms(forms, submittedFormIds) {
+        const container = document.getElementById("formsContainer");
+
+        if (forms.length === 0) {
+          container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">📋</div>
+            <h3>No forms available yet</h3>
+            <p>Your trainer will assign forms to you soon</p>
+          </div>
+        `;
+          return;
+        }
+
+        container.innerHTML = `
+        <div class="forms-grid">
+          ${forms
+            .map(
+              (form) => {
+                // Check if this form ID exists in the submissions list
+                const isSubmitted = submittedFormIds.has(form.id);
+                
+                return `
+            <div class="form-card-new" onclick="fillForm('${
+              form.id
+            }', '${form.title.replace(/'/g, "\\'")}')">
+              <div class="form-card-header">
+                <div class="form-card-icon">${isSubmitted ? '✅' : '📝'}</div>
+                <div style="flex: 1;">
+                  <h3 class="form-card-title">${form.title}</h3>
+                  <p class="form-card-meta">${form.data.fields.length} field${
+                form.data.fields.length !== 1 ? "s" : ""
+              } to complete</p>
+                </div>
+              </div>
+              <div class="form-card-footer">
+                <span class="badge ${isSubmitted ? 'badge-info' : 'badge-success'}">
+                  ${isSubmitted ? 'Completed' : 'Ready for Submission'}
+                </span>
+                <span class="form-card-action">
+                  ${isSubmitted ? 'Edit Submission →' : 'Start Now →'}
+                </span>
+              </div>
+            </div>
+          `}
+            )
+            .join("")}
+        </div>
+      `;
+      }
+
+      // Load reports
+      async function loadReports() {
+        try {
+          allReports = await api.get(`/api/reports/client/${clientId}`);
+          document.getElementById("reportsCount").textContent =
+            allReports.length;
+          document.getElementById("completedFormsCount").textContent =
+            allReports.length;
+          renderReports(allReports);
+        } catch (error) {
+          console.error("Error loading reports:", error);
+          document.getElementById("reportsContainer").innerHTML =
+            "<p>Failed to load reports</p>";
+        }
+      }
+
+      // Render reports
+      function renderReports(reports) {
+        const container = document.getElementById("reportsContainer");
+
+        if (reports.length === 0) {
+          container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">📊</div>
+            <h3>No reports yet</h3>
+            <p>Complete forms to see your progress reports</p>
+          </div>
+        `;
+          return;
+        }
+
+        container.innerHTML = `
+        <div class="forms-grid">
+          ${reports
+            .slice(0, 3)
+            .map((report) => {
+              const data = report.generated_report_data;
+              const score = data.overall_score.toFixed(1);
+              return `
+              <div class="report-card-new" style="--score-percent: ${score}%;">
+                <div class="report-score-circle">
+                  <div class="report-score-value">${score}%</div>
+                </div>
+                <h4 style="text-align: center; margin-bottom: var(--spacing-sm);">
+                  ${
+                    data.period.charAt(0).toUpperCase() + data.period.slice(1)
+                  } Report
+                </h4>
+                <p style="text-align: center; font-size: 0.875rem; color: var(--color-text-tertiary);">
+                  ${ui.formatDate(report.created_at)}
+                </p>
+              </div>
+            `;
+            })
+            .join("")}
+        </div>
+      `;
+      }
+
+      // Fill form
+      function fillForm(formId, formTitle) {
+        window.location.href = `/user/fill-form.html?id=${formId}&title=${encodeURIComponent(
+          formTitle
+        )}`;
+      }
+
+      // Load data on page load
+      loadData();
+      loadReports();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Submissions - FitMates</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/assets/css/common.css" />
+    <link rel="stylesheet" href="/assets/css/navbar.css" />
+    <link rel="stylesheet" href="/assets/css/user.css" />
+    <style>
+      .submissions-container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .submission-card {
+        background: linear-gradient(
+          135deg,
+          rgba(26, 26, 26, 0.95) 0%,
+          rgba(10, 10, 10, 0.98) 100%
+        );
+        border: 1px solid rgba(239, 68, 68, 0.15);
+        border-radius: var(--radius-xl);
+        padding: var(--spacing-2xl);
+        margin-bottom: var(--spacing-xl);
+        transition: all var(--transition-normal);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .submission-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: var(--gradient-shimmer);
+        transition: left 0.6s;
+        pointer-events: none;
+      }
+
+      .submission-card:hover {
+        border-color: var(--color-accent-red);
+        transform: translateY(-4px);
+        box-shadow: 0 15px 30px rgba(239, 68, 68, 0.2);
+      }
+
+      .submission-card:hover::before {
+        left: 100%;
+      }
+
+      .submission-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--spacing-lg);
+        padding-bottom: var(--spacing-lg);
+        border-bottom: 1px solid rgba(239, 68, 68, 0.1);
+      }
+
+      .submission-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--color-text-primary);
+      }
+
+      .submission-date {
+        font-size: 0.875rem;
+        color: var(--color-text-tertiary);
+      }
+
+      .submission-data {
+        display: grid;
+        gap: var(--spacing-md);
+      }
+
+      .data-row {
+        display: flex;
+        gap: var(--spacing-lg);
+        padding: var(--spacing-md);
+        background: rgba(239, 68, 68, 0.05);
+        border-radius: var(--radius-md);
+        border-left: 3px solid var(--color-accent-red);
+      }
+
+      .data-label {
+        min-width: 200px;
+        font-weight: 600;
+        color: var(--color-text-secondary);
+      }
+
+      .data-value {
+        flex: 1;
+        color: var(--color-text-primary);
+        font-weight: 500;
+      }
+
+      /* Mobile Responsive Styles */
+      @media (max-width: 768px) {
+        .submission-card {
+          padding: var(--spacing-lg);
+          margin-bottom: var(--spacing-lg);
+        }
+
+        .submission-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: var(--spacing-md);
+        }
+
+        .submission-title {
+          font-size: 1.25rem;
+        }
+
+        .submission-header > div:last-child {
+          width: 100%;
+          justify-content: flex-start;
+        }
+
+        /* Add horizontal scroll to submission data container */
+        .submission-data {
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+          margin: 0 calc(-1 * var(--spacing-lg)); /* Extend to card edges */
+          padding: 0 var(--spacing-lg);
+        }
+
+        .data-row {
+          flex-direction: row; /* Keep horizontal for scrolling */
+          gap: var(--spacing-md);
+          padding: var(--spacing-sm);
+          min-width: 400px; /* Force horizontal scroll */
+        }
+
+        .data-label {
+          min-width: 150px;
+          font-size: 0.875rem;
+          flex-shrink: 0;
+        }
+
+        .data-value {
+          font-size: 0.875rem;
+          flex: 1;
+        }
+
+        /* Enable horizontal scroll for tables */
+        .submission-data > div[style*="overflow-x"] {
+          -webkit-overflow-scrolling: touch;
+        }
+
+        /* Ensure tables are scrollable */
+        .dynamic-table {
+          font-size: 0.8rem !important;
+        }
+
+        .dynamic-table th,
+        .dynamic-table td {
+          padding: 6px !important;
+          white-space: nowrap;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Top Navbar -->
+    <nav class="top-navbar">
+      <div class="navbar-container">
+        <button class="hamburger-btn" id="hamburgerBtn">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <a href="/user/dashboard.html" class="navbar-brand">
+          <div>
+            <div class="navbar-logo">FitMates</div>
+            <p class="navbar-subtitle">Client Portal</p>
+          </div>
+        </a>
+
+        <ul class="navbar-menu">
+          <li class="navbar-menu-item">
+            <a href="/user/dashboard.html" class="navbar-menu-link">
+              <span>🏠</span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li class="navbar-menu-item">
+            <a href="/user/submissions.html" class="navbar-menu-link active">
+              <span>📝</span>
+              <span>Submissions</span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="navbar-actions">
+          <div class="navbar-user">
+            <div class="navbar-avatar" id="navbarAvatar">C</div>
+            <div class="navbar-user-info">
+              <div class="navbar-user-name" id="navbarUserName">Client</div>
+              <div class="navbar-user-role">Member</div>
+            </div>
+            <!-- Dropdown Menu -->
+            <div class="user-dropdown">
+              <a href="/user/profile.html" class="user-dropdown-item">
+                <span>👤</span>
+                <span>Visit Profile</span>
+              </a>
+              <a
+                href="#"
+                class="user-dropdown-item"
+                onclick="event.preventDefault(); auth.logout();"
+              >
+                <span>🚪</span>
+                <span>Logout</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+
+    <!-- Mobile Sidebar -->
+    <aside class="mobile-sidebar" id="mobileSidebar">
+      <div class="mobile-sidebar-header">
+        <div class="mobile-sidebar-logo">FitMates</div>
+        <p class="mobile-sidebar-subtitle">Client Portal</p>
+      </div>
+
+      <nav>
+        <ul class="mobile-menu">
+          <li class="mobile-menu-item">
+            <a href="/user/dashboard.html" class="mobile-menu-link">
+              <span class="mobile-menu-icon">🏠</span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li class="mobile-menu-item">
+            <a href="/user/submissions.html" class="mobile-menu-link active">
+              <span class="mobile-menu-icon">📝</span>
+              <span>Submissions</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="mobile-sidebar-footer">
+        <div class="user-info">
+          <div class="user-avatar" id="mobileUserAvatar">C</div>
+          <div class="user-details">
+            <h4 id="mobileUserName">Client</h4>
+            <p id="mobileUserEmail">client@example.com</p>
+          </div>
+        </div>
+        <button
+          class="btn btn-secondary"
+          style="width: 100%"
+          onclick="auth.logout()"
+        >
+          Logout
+        </button>
+      </div>
+    </aside>
+
+    <div class="user-layout">
+      <!-- Main Content -->
+      <main class="user-main">
+        <div class="submissions-container">
+          <!-- Page Header -->
+          <div style="margin-bottom: var(--spacing-2xl)">
+            <h1 style="font-size: 2.5rem; margin-bottom: var(--spacing-sm)">
+              My Submissions
+            </h1>
+            <p style="color: var(--color-text-secondary)">
+              View all your completed form submissions
+            </p>
+          </div>
+
+          <!-- Submissions List -->
+          <div id="submissionsContainer">
+            <div style="text-align: center; padding: 3rem">
+              <div class="spinner"></div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/auth.js"></script>
+    <script src="/assets/js/utils.js"></script>
+    <script src="/assets/js/navigation.js"></script>
+    <script>
+      // Require client authentication
+      auth.requireClient();
+
+      // Set user info in all locations
+      const user = auth.getCurrentUser();
+      if (user) {
+        const userName = user.name || "Client";
+        const userEmail = user.email;
+        const userInitial = userName[0].toUpperCase();
+
+        // Top navbar
+        document.getElementById("navbarUserName").textContent = userName;
+        document.getElementById("navbarAvatar").textContent = userInitial;
+
+        // Mobile sidebar
+        document.getElementById("mobileUserName").textContent = userName;
+        document.getElementById("mobileUserEmail").textContent = userEmail;
+        document.getElementById("mobileUserAvatar").textContent = userInitial;
+      }
+
+      const clientId = parseInt(user.id);
+
+      // Load submissions
+      async function loadSubmissions() {
+        try {
+          const submissions = await api.get(
+            `/api/forms/submissions/client/${clientId}`
+          );
+
+          // Get ALL forms (not just published) to map form IDs to titles
+          const forms = await api.get(`/api/forms/client/${clientId}`);
+          const formMap = {};
+          forms.forEach((form) => (formMap[form.id] = form));
+
+          renderSubmissions(submissions, formMap);
+        } catch (error) {
+          console.error("Error loading submissions:", error);
+          document.getElementById("submissionsContainer").innerHTML =
+            "<p>Failed to load submissions</p>";
+        }
+      }
+
+      // Render submissions
+      function renderSubmissions(submissions, formMap) {
+        const container = document.getElementById("submissionsContainer");
+
+        if (submissions.length === 0) {
+          container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">📝</div>
+            <h3>No submissions yet</h3>
+            <p>Your form submissions will appear here after you fill out forms</p>
+            <a href="/user/dashboard.html" class="btn btn-primary" style="margin-top: var(--spacing-lg);">
+              Go to Dashboard
+            </a>
+          </div>
+        `;
+          return;
+        }
+
+        container.innerHTML = submissions
+          .map((submission) => {
+            const form = formMap[submission.form_id];
+            const formTitle = form ? form.title : "Unknown Form";
+            const submissionData = submission.data;
+
+            return `
+          <div class="submission-card">
+            <div class="submission-header">
+              <div>
+                <h3 class="submission-title">${formTitle}</h3>
+                <p class="submission-date">Submitted on ${ui.formatDateTime(
+                  submission.submitted_at
+                )}</p>
+              </div>
+              <div style="display: flex; gap: var(--spacing-sm); align-items: center;">
+                <span class="badge badge-success">Completed</span>
+                <button class="btn btn-sm btn-secondary" onclick="window.location.href='/user/fill-form.html?id=${
+                  submission.form_id
+                }&title=${encodeURIComponent(formTitle)}'">
+                  Edit
+                </button>
+              </div>
+            </div>
+            <div class="submission-data">
+              ${renderSubmissionFields(form, submissionData)}
+            </div>
+          </div>
+        `;
+          })
+          .join("");
+      }
+
+      function renderSubmissionFields(form, data) {
+        if (!form || !form.data || !form.data.fields)
+          return "<p>Form definition not found</p>";
+
+        return form.data.fields
+          .map((field) => {
+            if (field.type === "dynamic_table") {
+              return renderDynamicTableResult(field, data);
+            }
+
+            // Normal fields
+            const value = data[field.id];
+            if (value === undefined) return "";
+
+            let displayValue = value;
+            if (field.type === "checkbox") {
+              displayValue = value ? "Yes" : "No";
+            }
+
+            return `
+            <div class="data-row">
+                <div class="data-label">${field.label}</div>
+                <div class="data-value">${displayValue}</div>
+            </div>
+            `;
+          })
+          .join("");
+      }
+
+      function renderDynamicTableResult(field, data) {
+        const columns = field.columns || [];
+        const rowCount =
+          data[`${field.id}_row_count`] || (field.rows ? field.rows.length : 0);
+
+        const rowIndices = Array.from({ length: rowCount }, (_, i) => i);
+
+        return `
+        <div style="margin-top: var(--spacing-md); overflow-x: auto;">
+            <h4 style="margin-bottom: var(--spacing-sm); color: var(--color-text-primary);">${
+              field.label
+            }</h4>
+            <table class="dynamic-table" style="width: 100%; border-collapse: collapse; min-width: 600px; font-size: 0.9rem;">
+                <thead>
+                    <tr style="background: rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.1);">
+                        ${columns
+                          .map(
+                            (col) => `
+                            <th style="padding: 8px; text-align: left; color: var(--color-text-secondary);">${col.label}</th>
+                        `
+                          )
+                          .join("")}
+                    </tr>
+                </thead>
+                <tbody>
+                    ${rowIndices
+                      .map(
+                        (rowIndex) => `
+                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            ${columns
+                              .map((col, colIndex) => {
+                                const key = `${field.id}_row_${rowIndex}_col_${colIndex}`;
+                                let val = data[key];
+
+                                if (
+                                  val === undefined &&
+                                  field.rows &&
+                                  field.rows[rowIndex]
+                                ) {
+                                  val = field.rows[rowIndex][`col_${colIndex}`];
+                                }
+
+                                if (val === undefined) val = "-";
+                                if (val === true) val = "✅";
+                                if (val === false) val = "❌";
+
+                                return `<td style="padding: 8px;">${val}</td>`;
+                              })
+                              .join("")}
+                        </tr>
+                    `
+                      )
+                      .join("")}
+                </tbody>
+            </table>
+        </div>
+        `;
+      }
+
+      // Load submissions on page load
+      loadSubmissions();
+    </script>
+  </body>
+</html>

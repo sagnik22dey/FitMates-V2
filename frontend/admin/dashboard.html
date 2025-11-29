@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - FitMates Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/assets/css/common.css" />
+    <link rel="stylesheet" href="/assets/css/navbar.css" />
+    <link rel="stylesheet" href="/assets/css/admin.css" />
+  </head>
+  <body>
+    <!-- Top Navbar -->
+    <nav class="top-navbar">
+      <div class="navbar-container">
+        <button class="hamburger-btn" id="hamburgerBtn">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <a href="/admin/dashboard.html" class="navbar-brand">
+          <div>
+            <div class="navbar-logo">FitMates</div>
+            <p class="navbar-subtitle">Admin Panel</p>
+          </div>
+        </a>
+
+        <ul class="navbar-menu">
+          <li class="navbar-menu-item">
+            <a href="/admin/dashboard.html" class="navbar-menu-link active">
+              <span>📊</span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li class="navbar-menu-item">
+            <a href="/admin/clients.html" class="navbar-menu-link">
+              <span>👥</span>
+              <span>Clients</span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="navbar-actions">
+          <div class="navbar-user">
+            <div class="navbar-avatar" id="navbarAvatar">A</div>
+            <div class="navbar-user-info">
+              <div class="navbar-user-name" id="navbarUserName">Admin</div>
+              <div class="navbar-user-role">Administrator</div>
+            </div>
+            <!-- Dropdown Menu -->
+            <div class="user-dropdown">
+              <a href="/admin/profile.html" class="user-dropdown-item">
+                <span>👤</span>
+                <span>Visit Profile</span>
+              </a>
+              <a
+                href="#"
+                class="user-dropdown-item"
+                onclick="event.preventDefault(); auth.logout();"
+              >
+                <span>🚪</span>
+                <span>Logout</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+
+    <!-- Mobile Sidebar -->
+    <aside class="mobile-sidebar" id="mobileSidebar">
+      <div class="mobile-sidebar-header">
+        <div class="mobile-sidebar-logo">FitMates</div>
+        <p class="mobile-sidebar-subtitle">Admin Panel</p>
+      </div>
+
+      <nav>
+        <ul class="mobile-menu">
+          <li class="mobile-menu-item">
+            <a href="/admin/dashboard.html" class="mobile-menu-link active">
+              <span class="mobile-menu-icon">📊</span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li class="mobile-menu-item">
+            <a href="/admin/clients.html" class="mobile-menu-link">
+              <span class="mobile-menu-icon">👥</span>
+              <span>Clients</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="mobile-sidebar-footer">
+        <div class="user-info">
+          <div class="user-avatar" id="mobileUserAvatar">A</div>
+          <div class="user-details">
+            <h4 id="mobileUserName">Admin</h4>
+            <p id="mobileUserEmail">admin@fitmates.com</p>
+          </div>
+        </div>
+        <button
+          class="btn btn-secondary"
+          style="width: 100%"
+          onclick="auth.logout()"
+        >
+          Logout
+        </button>
+      </div>
+    </aside>
+
+    <div class="admin-layout">
+      <!-- Desktop Sidebar -->
+      <aside class="sidebar" id="desktopSidebar">
+        <div class="sidebar-logo">
+          <h2>FitMates</h2>
+          <p>Admin Panel</p>
+        </div>
+
+        <nav>
+          <ul class="sidebar-nav">
+            <li class="sidebar-nav-item">
+              <a href="/admin/dashboard.html" class="sidebar-nav-link active">
+                <span class="sidebar-nav-icon">📊</span>
+                <span>Dashboard</span>
+              </a>
+            </li>
+            <li class="sidebar-nav-item">
+              <a href="/admin/clients.html" class="sidebar-nav-link">
+                <span class="sidebar-nav-icon">👥</span>
+                <span>Clients</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <div class="sidebar-footer">
+          <div class="user-info">
+            <div class="user-avatar" id="userAvatar">A</div>
+            <div class="user-details">
+              <h4 id="userName">Admin</h4>
+              <p id="userEmail">admin@fitmates.com</p>
+            </div>
+          </div>
+          <button
+            class="btn btn-secondary"
+            style="width: 100%"
+            onclick="auth.logout()"
+          >
+            Logout
+          </button>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <div class="page-header">
+          <h1 class="page-title">Dashboard</h1>
+          <p class="page-subtitle">
+            Welcome back! Here's what's happening with your clients.
+          </p>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid" id="statsGrid">
+          <div class="stat-card">
+            <div class="stat-header">
+              <div>
+                <div class="stat-value" id="totalClients">--</div>
+                <div class="stat-label">Total Clients</div>
+              </div>
+              <div class="stat-icon">👥</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <div>
+                <div class="stat-value" id="totalForms">--</div>
+                <div class="stat-label">Total Forms</div>
+              </div>
+              <div class="stat-icon">📋</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <div>
+                <div class="stat-value" id="publishedForms">--</div>
+                <div class="stat-label">Published Forms</div>
+              </div>
+              <div class="stat-icon">✅</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <div>
+                <div class="stat-value" id="totalSubmissions">--</div>
+                <div class="stat-label">Submissions</div>
+              </div>
+              <div class="stat-icon">📝</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-header">
+              <div>
+                <div class="stat-value" id="totalReports">--</div>
+                <div class="stat-label">Reports Generated</div>
+              </div>
+              <div class="stat-icon">📊</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Content Grid -->
+        <div class="content-grid">
+          <!-- Recent Activity -->
+          <div class="card">
+            <h3 style="margin-bottom: var(--spacing-lg)">Recent Activity</h3>
+            <ul class="activity-list" id="activityList">
+              <li class="activity-item">
+                <div class="activity-icon">
+                  <div class="spinner spinner-sm"></div>
+                </div>
+                <div class="activity-content">
+                  <h4>Loading...</h4>
+                  <p>Please wait</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="card">
+            <h3 style="margin-bottom: var(--spacing-lg)">Quick Actions</h3>
+            <div class="flex flex-col gap-md">
+              <a href="/admin/clients.html" class="btn btn-primary">
+                <span>👥</span>
+                <span>View All Clients</span>
+              </a>
+              <button
+                class="btn btn-secondary"
+                onclick="showCreateClientModal()"
+              >
+                <span>➕</span>
+                <span>Add New Client</span>
+              </button>
+            </div>
+
+            <div
+              style="
+                margin-top: var(--spacing-xl);
+                padding-top: var(--spacing-xl);
+                border-top: 1px solid var(--color-border);
+              "
+            >
+              <h4 style="font-size: 0.875rem; margin-bottom: var(--spacing-md)">
+                System Info
+              </h4>
+              <p
+                style="
+                  font-size: 0.75rem;
+                  color: var(--color-text-tertiary);
+                  margin-bottom: var(--spacing-xs);
+                "
+              >
+                <strong>Version:</strong> 2.0.0
+              </p>
+              <p
+                style="
+                  font-size: 0.75rem;
+                  color: var(--color-text-tertiary);
+                  margin: 0;
+                "
+              >
+                <strong>Last Updated:</strong> <span id="lastUpdated">--</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/auth.js"></script>
+    <script src="/assets/js/utils.js"></script>
+    <script src="/assets/js/navigation.js"></script>
+    <script>
+      // Require admin authentication
+      auth.requireAdmin();
+
+      // Set user info in all locations
+      const user = auth.getCurrentUser();
+      if (user) {
+        const userName = user.name || "Admin";
+        const userEmail = user.email;
+        const userInitial = userName[0].toUpperCase();
+
+        // Desktop sidebar
+        document.getElementById("userName").textContent = userName;
+        document.getElementById("userEmail").textContent = userEmail;
+        document.getElementById("userAvatar").textContent = userInitial;
+
+        // Top navbar
+        document.getElementById("navbarUserName").textContent = userName;
+        document.getElementById("navbarAvatar").textContent = userInitial;
+
+        // Mobile sidebar
+        document.getElementById("mobileUserName").textContent = userName;
+        document.getElementById("mobileUserEmail").textContent = userEmail;
+        document.getElementById("mobileUserAvatar").textContent = userInitial;
+      }
+
+      // Load dashboard data
+      async function loadDashboard() {
+        try {
+          const analytics = await api.get("/api/admin/dashboard/analytics");
+
+          // Update stats
+          document.getElementById("totalClients").textContent =
+            analytics.total_clients || 0;
+          document.getElementById("totalForms").textContent =
+            analytics.total_forms || 0;
+          document.getElementById("publishedForms").textContent =
+            analytics.published_forms || 0;
+          document.getElementById("totalSubmissions").textContent =
+            analytics.total_submissions || 0;
+          document.getElementById("totalReports").textContent =
+            analytics.total_reports || 0;
+
+          // Update recent activity
+          const activityList = document.getElementById("activityList");
+          if (
+            analytics.recent_activity &&
+            analytics.recent_activity.length > 0
+          ) {
+            activityList.innerHTML = analytics.recent_activity
+              .map(
+                (activity) => `
+            <li class="activity-item">
+              <div class="activity-icon">📝</div>
+              <div class="activity-content">
+                <h4>${activity.client_name} submitted ${
+                  activity.form_title
+                }</h4>
+                <p>${ui.formatDateTime(activity.submitted_at)}</p>
+              </div>
+            </li>
+          `
+              )
+              .join("");
+          } else {
+            activityList.innerHTML = `
+            <li class="activity-item">
+              <div class="activity-icon">ℹ️</div>
+              <div class="activity-content">
+                <h4>No recent activity</h4>
+                <p>Activity will appear here when clients submit forms</p>
+              </div>
+            </li>
+          `;
+          }
+
+          // Update last updated time
+          document.getElementById("lastUpdated").textContent =
+            ui.formatDateTime(new Date().toISOString());
+        } catch (error) {
+          console.error("Error loading dashboard:", error);
+          ui.showToast("Failed to load dashboard data", "error");
+        }
+      }
+
+      // Show create client modal
+      function showCreateClientModal() {
+        const modalContent = `
+        <form id="createClientForm">
+          <div class="input-group">
+            <label class="input-label" for="clientName">Name</label>
+            <input type="text" id="clientName" class="input" required>
+          </div>
+          <div class="input-group">
+            <label class="input-label" for="clientEmail">Email</label>
+            <input type="email" id="clientEmail" class="input" required>
+          </div>
+          <div class="input-group">
+            <label class="input-label" for="clientPassword">Password</label>
+            <input type="password" id="clientPassword" class="input" required>
+          </div>
+          <div class="input-group">
+            <label class="input-label" for="clientMobile">Mobile</label>
+            <input type="tel" id="clientMobile" class="input">
+          </div>
+        </form>
+      `;
+
+        const modal = ui.createModal(
+          "Create New Client",
+          modalContent,
+          async () => {
+            const form = document.getElementById("createClientForm");
+            if (!form.checkValidity()) {
+              ui.showToast("Please fill all required fields", "error");
+              return;
+            }
+
+            try {
+              await api.post("/api/admin/clients", {
+                name: document.getElementById("clientName").value,
+                email: document.getElementById("clientEmail").value,
+                password: document.getElementById("clientPassword").value,
+                mobile: document.getElementById("clientMobile").value || null,
+              });
+
+              ui.showToast("Client created successfully", "success");
+              loadDashboard();
+            } catch (error) {
+              ui.showToast(error.message || "Failed to create client", "error");
+            }
+          }
+        );
+      }
+
+      // Load dashboard on page load
+      loadDashboard();
+
+      // Auto-refresh every 30 seconds
+      setInterval(loadDashboard, 30000);
+    </script>
+  </body>
+</html>

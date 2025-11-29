@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fill Form - FitMates</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/assets/css/common.css" />
+    <link rel="stylesheet" href="/assets/css/navbar.css" />
+    <link rel="stylesheet" href="/assets/css/user.css" />
+  </head>
+  <body>
+    <!-- Top Navbar -->
+    <nav class="top-navbar">
+      <div class="navbar-container">
+        <button class="hamburger-btn" id="hamburgerBtn">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <a href="/user/dashboard.html" class="navbar-brand">
+          <div>
+            <div class="navbar-logo">FitMates</div>
+            <p class="navbar-subtitle">Client Portal</p>
+          </div>
+        </a>
+
+        <ul class="navbar-menu">
+          <li class="navbar-menu-item">
+            <a href="/user/dashboard.html" class="navbar-menu-link active">
+              <span>🏠</span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li class="navbar-menu-item">
+            <a href="/user/submissions.html" class="navbar-menu-link">
+              <span>📝</span>
+              <span>Submissions</span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="navbar-actions">
+          <div class="navbar-user">
+            <div class="navbar-avatar" id="navbarAvatar">C</div>
+            <div class="navbar-user-info">
+              <div class="navbar-user-name" id="navbarUserName">Client</div>
+              <div class="navbar-user-role">Member</div>
+            </div>
+            <!-- Dropdown Menu -->
+            <div class="user-dropdown">
+              <a href="/user/profile.html" class="user-dropdown-item">
+                <span>👤</span>
+                <span>Visit Profile</span>
+              </a>
+              <a
+                href="#"
+                class="user-dropdown-item"
+                onclick="event.preventDefault(); auth.logout();"
+              >
+                <span>🚪</span>
+                <span>Logout</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+
+    <!-- Mobile Sidebar -->
+    <aside class="mobile-sidebar" id="mobileSidebar">
+      <div class="mobile-sidebar-header">
+        <div class="mobile-sidebar-logo">FitMates</div>
+        <p class="mobile-sidebar-subtitle">Client Portal</p>
+      </div>
+
+      <nav>
+        <ul class="mobile-menu">
+          <li class="mobile-menu-item">
+            <a href="/user/dashboard.html" class="mobile-menu-link active">
+              <span class="mobile-menu-icon">🏠</span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li class="mobile-menu-item">
+            <a href="/user/submissions.html" class="mobile-menu-link">
+              <span class="mobile-menu-icon">📝</span>
+              <span>Submissions</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="mobile-sidebar-footer">
+        <div class="user-info">
+          <div class="user-avatar" id="mobileUserAvatar">C</div>
+          <div class="user-details">
+            <h4 id="mobileUserName">Client</h4>
+            <p id="mobileUserEmail">client@example.com</p>
+          </div>
+        </div>
+        <button
+          class="btn btn-secondary"
+          style="width: 100%"
+          onclick="auth.logout()"
+        >
+          Logout
+        </button>
+      </div>
+    </aside>
+
+    <div class="user-layout">
+      <!-- Main Content -->
+      <main class="user-main">
+        <div style="margin-bottom: var(--spacing-lg)">
+          <a
+            href="/user/dashboard.html"
+            style="color: var(--color-text-secondary); font-size: 0.875rem"
+          >
+            ← Back to Dashboard
+          </a>
+        </div>
+
+        <div class="form-fill-container">
+          <div class="card">
+            <h1 id="formTitle" style="margin-bottom: var(--spacing-lg)">
+              Loading...
+            </h1>
+
+            <form id="fillFormElement">
+              <div id="formFields"></div>
+
+              <div
+                style="
+                  display: flex;
+                  gap: var(--spacing-md);
+                  margin-top: var(--spacing-2xl);
+                "
+              >
+                <button
+                  type="button"
+                  class="btn btn-secondary flex-1"
+                  onclick="window.location.href='/user/dashboard.html'"
+                >
+                  Cancel
+                </button>
+                <button type="submit" class="btn btn-primary flex-1">
+                  Submit Form
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/auth.js"></script>
+    <script src="/assets/js/utils.js"></script>
+    <script src="/assets/js/navigation.js"></script>
+    <script>
+      // Require client authentication
+      auth.requireClient();
+
+      // Set user info in all locations
+      const user = auth.getCurrentUser();
+      if (user) {
+        const userName = user.name || "Client";
+        const userEmail = user.email;
+        const userInitial = userName[0].toUpperCase();
+
+        // Top navbar
+        document.getElementById("navbarUserName").textContent = userName;
+        document.getElementById("navbarAvatar").textContent = userInitial;
+
+        // Mobile sidebar
+        document.getElementById("mobileUserName").textContent = userName;
+        document.getElementById("mobileUserEmail").textContent = userEmail;
+        document.getElementById("mobileUserAvatar").textContent = userInitial;
+      }
+
+      const clientId = parseInt(user.id);
+
+      // Get form ID from URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const formId = urlParams.get("id");
+      const formTitle = urlParams.get("title");
+
+      if (!formId) {
+        window.location.href = "/user/dashboard.html";
+      }
+
+      document.getElementById("formTitle").textContent = decodeURIComponent(
+        formTitle || "Form"
+      );
+
+      let currentForm = null;
+
+      // Load form
+      async function loadForm() {
+        try {
+          // Load ALL forms for this client (not just published) so they can edit submissions
+          const forms = await api.get(`/api/forms/client/${clientId}`);
+          currentForm = forms.find((f) => f.id === formId);
+
+          if (!currentForm) {
+            ui.showToast("Form not found", "error");
+            setTimeout(
+              () => (window.location.href = "/user/dashboard.html"),
+              2000
+            );
+            return;
+          }
+
+          renderFormFields(currentForm.data.fields);
+
+          // Always check for existing submission to allow editing
+          await loadSubmissionData();
+        } catch (error) {
+          console.error("Error loading form:", error);
+          ui.showToast("Failed to load form", "error");
+        }
+      }
+
+      // Render form fields
+      function renderFormFields(fields) {
+        const container = document.getElementById("formFields");
+
+        container.innerHTML = fields
+          .map((field) => {
+            let inputHtml = "";
+
+            switch (field.type) {
+              case "text":
+                inputHtml = `<input type="text" id="${
+                  field.id
+                }" class="input" ${field.required ? "required" : ""} />`;
+                break;
+
+              case "number":
+                inputHtml = `
+              <input type="number" id="${field.id}" class="input" ${
+                  field.required ? "required" : ""
+                } />
+              ${
+                field.target
+                  ? `<p style="font-size: 0.75rem; color: var(--color-text-tertiary); margin-top: var(--spacing-xs);">Target: ${
+                      field.target
+                    } ${field.unit || ""}</p>`
+                  : ""
+              }
+            `;
+                break;
+
+              case "date":
+                inputHtml = `<input type="date" id="${
+                  field.id
+                }" class="input" ${field.required ? "required" : ""} />`;
+                break;
+
+              case "dropdown":
+                inputHtml = `
+              <select id="${field.id}" class="input" ${
+                  field.required ? "required" : ""
+                }>
+                <option value="">Select an option</option>
+                ${(field.options || [])
+                  .map((opt) => `<option value="${opt}">${opt}</option>`)
+                  .join("")}
+              </select>
+            `;
+                break;
+
+              case "checkbox":
+                inputHtml = `
+              <div class="checkbox-wrapper">
+                <input type="checkbox" id="${field.id}" ${
+                  field.required ? "required" : ""
+                } />
+                <label for="${field.id}">Yes</label>
+              </div>`;
+                break;
+
+              case "textarea":
+                inputHtml = `<textarea id="${
+                  field.id
+                }" class="input" rows="4" ${
+                  field.required ? "required" : ""
+                }></textarea>`;
+                break;
+
+              case "dynamic_table":
+                const columns = field.columns || [];
+                const rows = field.rows || [];
+
+                inputHtml = `
+              <div class="dynamic-table-container" style="overflow-x: auto;">
+                <table class="dynamic-table" id="table_${
+                  field.id
+                }" style="width: 100%; border-collapse: collapse; min-width: 600px;">
+                  <thead>
+                    <tr style="background: rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.1);">
+                      ${columns
+                        .map(
+                          (col) => `
+                        <th style="padding: 12px; text-align: left; color: var(--color-text-secondary); border-bottom: 2px solid ${
+                          col.access === "client"
+                            ? "var(--color-accent-blue)"
+                            : "transparent"
+                        };">
+                          ${col.label}
+                          ${
+                            col.access === "client"
+                              ? '<span style="font-size: 0.7em; opacity: 0.7; display: block;">(You)</span>'
+                              : ""
+                          }
+                        </th>
+                      `
+                        )
+                        .join("")}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${rows
+                      .map((row, rowIndex) =>
+                        renderDynamicTableRow(field.id, columns, row, rowIndex)
+                      )
+                      .join("")}
+                  </tbody>
+                </table>
+              </div>
+            `;
+
+                // Store columns definition globally for the add row function to use
+                window[`cols_${field.id}`] = columns;
+                break;
+            }
+
+            return `
+          <div class="form-field">
+            ${
+              field.type !== "checkbox"
+                ? `<label class="input-label" for="${field.id}">${
+                    field.label
+                  } ${field.required ? "*" : ""}</label>`
+                : ""
+            }
+            ${
+              field.type === "checkbox"
+                ? `<label class="input-label">${field.label} ${
+                    field.required ? "*" : ""
+                  }</label>`
+                : ""
+            }
+            ${inputHtml}
+          </div>
+        `;
+          })
+          .join("");
+      }
+
+      // Load existing submission data if available
+      async function loadSubmissionData() {
+        try {
+          const submissions = await api.get(
+            `/api/forms/submissions/client/${clientId}`
+          );
+          const existingSubmission = submissions.find(
+            (s) => s.form_id === formId
+          );
+
+          if (existingSubmission && existingSubmission.data) {
+            // Populate form fields with existing data
+            currentForm.data.fields.forEach((field) => {
+              if (field.type === "dynamic_table") {
+                // Handle dynamic table data
+                const table = document.getElementById(`table_${field.id}`);
+                if (table) {
+                  const rows = table.querySelectorAll("tbody tr");
+                  rows.forEach((row, rowIndex) => {
+                    const inputs = row.querySelectorAll(".dynamic-input");
+                    inputs.forEach((input) => {
+                      const idParts = input.id.split("_col_");
+                      if (idParts.length === 2) {
+                        const colIndex = idParts[1];
+                        const key = `${field.id}_row_${rowIndex}_col_${colIndex}`;
+                        const value = existingSubmission.data[key];
+
+                        if (value !== undefined) {
+                          if (input.type === "checkbox") {
+                            input.checked = value === true || value === "true";
+                          } else {
+                            input.value = value;
+                          }
+                        }
+                      }
+                    });
+                  });
+                }
+              } else {
+                // Normal fields
+                const element = document.getElementById(field.id);
+                if (
+                  element &&
+                  existingSubmission.data[field.id] !== undefined
+                ) {
+                  if (field.type === "checkbox") {
+                    element.checked =
+                      existingSubmission.data[field.id] === true ||
+                      existingSubmission.data[field.id] === "true";
+                  } else {
+                    element.value = existingSubmission.data[field.id];
+                  }
+                }
+              }
+            });
+          }
+        } catch (error) {
+          console.error("Error loading submission data:", error);
+          // Don't show error toast - it's okay if there's no existing submission
+        }
+      }
+
+      function renderDynamicTableRow(fieldId, columns, rowData, rowIndex) {
+        return `
+        <tr class="dynamic-table-row" data-row-index="${rowIndex}" style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+            ${columns
+              .map((col, colIndex) => {
+                const val = rowData[`col_${colIndex}`] || "";
+                const isEditable = col.access === "client";
+
+                let cellContent = "";
+                if (isEditable) {
+                  // Client editable field
+                  const inputId = `${fieldId}_row_${rowIndex}_col_${colIndex}`;
+                  if (col.type === "checkbox") {
+                    cellContent = `<input type="checkbox" id="${inputId}" class="dynamic-input checkbox" ${
+                      val === "true" ? "checked" : ""
+                    }>`;
+                  } else {
+                    cellContent = `<input type="${
+                      col.type === "number" ? "number" : "text"
+                    }" id="${inputId}" class="input dynamic-input" value="${val}" style="padding: 4px;">`;
+                  }
+                } else {
+                  // Admin read-only field
+                  cellContent = `<span style="color: var(--color-text-primary);">${val}</span>`;
+                  // Hidden input to submit admin values back if needed, or just rely on merge
+                  cellContent += `<input type="hidden" id="${fieldId}_row_${rowIndex}_col_${colIndex}" class="dynamic-input" value="${val}">`;
+                }
+
+                return `<td style="padding: 12px;">${cellContent}</td>`;
+              })
+              .join("")}
+        </tr>
+        `;
+      }
+
+      // Handle form submission
+      document
+        .getElementById("fillFormElement")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const submissionData = {};
+
+          // Collect data from all fields
+          currentForm.data.fields.forEach((field) => {
+            if (field.type === "dynamic_table") {
+              // Collect dynamic table data
+              const table = document.getElementById(`table_${field.id}`);
+              const rows = table.querySelectorAll("tbody tr");
+
+              rows.forEach((row, rowIndex) => {
+                const inputs = row.querySelectorAll(".dynamic-input");
+                inputs.forEach((input) => {
+                  const idParts = input.id.split("_col_");
+                  if (idParts.length === 2) {
+                    const colIndex = idParts[1];
+                    const key = `${field.id}_row_${rowIndex}_col_${colIndex}`;
+                    submissionData[key] =
+                      input.type === "checkbox" ? input.checked : input.value;
+                  }
+                });
+              });
+
+              // Also store row count to help with reconstruction
+              submissionData[`${field.id}_row_count`] = rows.length;
+            } else {
+              // Normal fields
+              const element = document.getElementById(field.id);
+              if (element) {
+                if (field.type === "checkbox") {
+                  submissionData[field.id] = element.checked;
+                } else {
+                  submissionData[field.id] = element.value;
+                }
+              }
+            }
+          });
+
+          try {
+            await api.post("/api/forms/submit", {
+              form_id: formId,
+              client_id: clientId,
+              data: submissionData,
+            });
+
+            ui.showToast("Form submitted successfully!", "success");
+            setTimeout(() => {
+              window.location.href = "/user/dashboard.html";
+            }, 1500);
+          } catch (error) {
+            console.error("Error submitting form:", error);
+            ui.showToast(error.message || "Failed to submit form", "error");
+          }
+        });
+
+      // Initialize
+      loadForm();
+    </script>
+  </body>
+</html>
