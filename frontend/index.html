@@ -672,19 +672,6 @@
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
-        padding: 20px;
-        opacity: 0;
-        transition: 0.3s;
-      }
-
-      .gallery-item:hover .gallery-overlay {
-        opacity: 1;
-      }
-
-      .gallery-title {
-        color: var(--red);
-        font-weight: 900;
-        font-size: 18px;
         text-transform: uppercase;
       }
 
@@ -791,14 +778,77 @@
         }
 
         .hero-title {
-          font-size: 50px;
-        }
-        .section-title {
           font-size: 40px;
+        }
+
+        .hero-subtitle {
+          font-size: 14px;
+          letter-spacing: 3px;
+        }
+
+        .hero-desc {
+          font-size: 16px;
+          margin-bottom: 30px;
+        }
+
+        .section-title {
+          font-size: 32px;
+        }
+
+        section {
+          padding: 50px 20px;
+        }
+
+        .stats {
+          padding: 30px 20px;
+          gap: 20px;
+        }
+
+        .stat-num {
+          font-size: 40px;
+        }
+
+        .coach-img {
+          height: auto;
+          gap: 30px;
+          margin: 30px 0;
         }
 
         .package-card.featured {
           transform: scale(1);
+        }
+
+        /* Slick Mobile Scroll Animation */
+        .gallery-item {
+          overflow: hidden; /* Contain the zoom */
+        }
+
+        .gallery-item img {
+          transition: transform 0.8s ease;
+          width: 100%;
+          height: auto;
+          display: block;
+        }
+
+        .gallery-overlay {
+          background: linear-gradient(
+            to top,
+            rgba(0, 0, 0, 0.8) 0%,
+            transparent 70%
+          );
+          transform: translateY(100%); /* Initially hidden below */
+          opacity: 0;
+          padding: 15px; /* Reduced padding */
+          transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .gallery-item.in-view .gallery-overlay {
+          transform: translateY(0); /* Slide up */
+          opacity: 1 !important;
+        }
+
+        .gallery-item.in-view img {
+          transform: scale(1.05); /* Gentle zoom */
         }
       }
     </style>
@@ -1143,6 +1193,24 @@
           style="display: inline-block"
           >Chat on WhatsApp</a
         >
+
+        <div style="margin-top: 20px">
+          <a
+            href="https://www.instagram.com/fitsmate?utm_source=qr&igsh=bnc2aDJyY2NzdHBp"
+            target="_blank"
+          >
+            <img
+              src="Resources/instagram_link.jpg"
+              alt="Instagram"
+              style="
+                width: 150px;
+                height: 150px;
+                object-fit: cover;
+                border-radius: 10px;
+              "
+            />
+          </a>
+        </div>
       </div>
     </section>
 
@@ -1179,6 +1247,29 @@
 
       mobileMenuLinks.forEach((link) => {
         link.addEventListener("click", closeMenu);
+      });
+
+      // Scroll Animation for Mobile Gallery
+      const observerOptions = {
+        threshold: 0.2, // Trigger when 20% visible
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("in-view");
+          } else {
+            // Optional: keep it visible once triggered, or toggle.
+            // Let's keep it simple: toggle for now, but maybe user wants it to stay?
+            // If user says "not able to view", maybe it's flickering or not triggering.
+            // Let's stick to toggle but with better threshold.
+            entry.target.classList.remove("in-view");
+          }
+        });
+      }, observerOptions);
+
+      document.querySelectorAll(".gallery-item").forEach((item) => {
+        observer.observe(item);
       });
     </script>
   </body>
